@@ -298,7 +298,7 @@
 
 		// The increment at which to zoom
 		// Should be a number greater than 0
-		increment: 0.1,
+		increment: 0.05,
 
 		// When no scale is passed, this option tells
 		// the `zoom` method to increment
