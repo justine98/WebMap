@@ -1,11 +1,12 @@
 {
-  "name"         : "SuroyUP",
-  "version"      : "0.0.0",
-  "description"  : "Simple UP Suroy application.",
-  "main"         : "index.js",
-  "author"       : "Justine",
-  "dependencies" : {
-    "express"    : "*",
-    "pg"         : "*"
+  "name": "SuroyUP",
+  "version": "0.0.0",
+  "description": "Simple UP Suroy application.",
+  "main": "index.js",
+  "author": "Justine",
+  "dependencies": {
+    "express": "*",
+    "ngtouch": "^1.0.1",
+    "pg": "*"
   }
 }

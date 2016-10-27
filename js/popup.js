@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
 	//open popup
-	$('.cd-popup-trigger').on('click', function(event){
+	$('.cd-popup-trigger').bind('click touchend', function(event){
 		event.preventDefault();
 		$('.cd-popup').addClass('is-visible');
 	});

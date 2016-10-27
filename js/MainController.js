@@ -28,4 +28,11 @@ app.controller('MainController', ($scope, $http) => {
 	$scope.setPhoto = function(x){
 		$scope.photo = x.Ploc;
 	}
+
+	$scope.onTouchstart = function(x) {
+   		$scope.title = x.Bldng;
+		$scope.description = x.Dscr;
+		$scope.photo = x.ip;
+		angular.copy(x.f, $scope.fps)
+	}
 })
