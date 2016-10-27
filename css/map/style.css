@@ -30,6 +30,10 @@ html {
     color: black;/*white;*/
 }
 
+.button2 {
+    border:none;display:inline-block;outline:0;padding:6px 16px;vertical-align:middle;overflow:hidden;text-decoration:none!important;color:#fff;background-color:#000;text-align:center;cursor:pointer;white-space:nowrap
+}
+
 .button5 {
     background-color: white;
     color: black;
