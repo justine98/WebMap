@@ -68,18 +68,43 @@
         </div>
       </div>
 
-      <div class="modal" id="myModal1" >
+     <div class="modal" id="myModal1" >
         <div class="modal-content" style="background-color: white;">
+          <div class="fp-content fp-display-container" style="width:100% height:80%" >
+            <img style="margin-top:20px" src={{picture}} style="width:100% height:30%">
+          </div>
 
+          <div>
+            <button style="margin-top:5px" class="fp-btn fp-hover-dark-grey" ng-click="setPhoto1(x)">❮</button>
+            <button style="margin-top:5px" class="fp-btn fp-hover-dark-grey" ng-click="setPhoto1(x)">❯</button>
+          </div>
+
+          <div class="modal-footer" style="margin-bottom:10px; margin-top:10px"></div>
+          <span ng-repeat="x in pps" style="margin-top: 10px">
+            <input type="image" src={{x.Dloc}} width="140" height="90" ng-click="setPhoto1(x)" class="fp-hover-opacity" style="border: 4px solid #444"/>
+          </span>
+
+          <div class="buttonGroup">
+          <ul class="ulz">
+            <button title="Collapse Modal" onclick="closeModal()" class="closeMod"><img src="images/back.png" style="width: 35px; height: 35px"></button>
+          </ul>
+          </div>
         </div>
       </div>
+
+
 
       <div class="modal" id="myModal2" >
-        <div class="modal-content" style="background-color: red;">
-        <iframe width="854" height="480" src={{vidlink}} allowfullscreen></iframe>
+        <div class="modal-content" style="background-color: white;">
+        <iframe style= "margin-top: 40px;" width="854" height="480" src={{vidlink}} allowfullscreen></iframe>
+      <div class="buttonGroup">
+        <ul class="ulz">
+          <button title="Collapse Modal" onclick="closeModal()" class="closeMod"><img src="images/back.png" style="width: 35px; height: 35px"></button>
+        </ul>
+     </div>
+    </div>
+  </div>
 
-        </div>
-      </div>
     </section>
 
     <div class="panel-container" style="max-width: {{ max }}">
