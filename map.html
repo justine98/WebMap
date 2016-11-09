@@ -201,6 +201,21 @@
           $('.modal').removeClass('visible');
       }
 
+      var myIndex = 0;
+      carousel();
+
+      function carousel() {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        for (i = 0; i < x.length; i++) {
+           x[i].style.display = "none";
+        }
+        myIndex++;
+        if (myIndex > x.length) {myIndex = 1}
+        x[myIndex-1].style.display = "block";
+        setTimeout(carousel, 2000); // Change image every 2 seconds
+      }
+
       
         /*$('.distribution-map button').on('mousedown touchstart', function( e ) {
             e.stopImmediatePropagation();
@@ -222,6 +237,7 @@
 
         var $panzoom1 = $section.find('.containerz').panzoom({
            $reset: $(".button7"),
+           contain: 'automatic'
         });
 
         $panzoom.on('mousewheel.focal', function( e ) {
@@ -236,6 +252,12 @@
         });
 
         function hey(event){
+            var w = (window.innerWidth)/2;
+            var h = (window.innerHeight)/2;
+            var x = event.clientX;
+            var y = event.clientY;
+            x = (w-x);
+            y = (h-y);
           if($('.panel-container').hasClass('is-visible')){
             /*$panzoom.panzoom('zoom', 1, true);
             $panzoom.panzoom('zoom', 2,  {
@@ -247,17 +269,24 @@
             /*$panzoom.panzoom('zoom', 3,  {
               animate: true,
               focal: event
-            });*/
-            $panzoom.panzoom('zoom', 3, {
-              animate: true,
-              focal: event
-            });
-            $panzoom.panzoom("zoom", 2, {
+            });*//*
+            $panzoom.panzoom("reset");*/
+            
+            /*$panzoom.panzoom("zoom", 1, {
               animate: true
-            });
+            });*/
+
+            
+
+            /*alert("W:" +  w + " H:" + h + " X:" + x + " Y:" + y)*/;
             /*
             $panzoom.panzoom("zoom", 2, true);*/
           }
+          $panzoom.panzoom('zoom', 2, {
+              animate: true,
+              focal: event
+            });
+          $panzoom.panzoom("pan", x, y, { relative: true });
           
         }
 

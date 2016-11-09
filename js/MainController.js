@@ -85,10 +85,6 @@ app.controller('MainController', ($scope, $http, $sce) => {
 		$scope.photo = x.Ploc;
 	}
 
-	$scope.setPhoto = function(x){
-		$scope.picture = x.Ploc;
-	}
-
 	$scope.onTouchstart = function(x) {
    		$scope.title = x.Bldng;
 		$scope.description = x.Dscr;
