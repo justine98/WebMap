@@ -75,7 +75,8 @@
       </div>
 
       <div class="modal" id="myModal2" >
-        <div class="modal-content" style="background-color: black;">
+        <div class="modal-content" style="background-color: red;">
+        <iframe width="854" height="480" src={{vidlink}} allowfullscreen></iframe>
 
         </div>
       </div>
@@ -219,9 +220,9 @@
             /*contain: 'automatic'*/
           }).panzoom('zoom');
 
-        /*var $panzoom1 = $section.find('.containerz').panzoom({
+        var $panzoom1 = $section.find('.containerz').panzoom({
            $reset: $(".button7"),
-        });*/
+        });
 
         $panzoom.on('mousewheel.focal', function( e ) {
           e.preventDefault();

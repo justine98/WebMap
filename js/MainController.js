@@ -8,7 +8,8 @@ app.controller('MainController', ($scope, $http, $sce) => {
 						{Ploc:'images/floorplans/AS/AS 2ND FLR RIGHT.png', flr: 'R2'}, 
 						{Ploc:'images/floorplans/AS/AS DCS 3RD FLR.png', flr: 'R3'}
 					]
-
+	$scope.vidz = '';
+	$scope.vidlink ='';
 	$scope.pps =  [		{Dloc: 'images/temp gallery/a.jpg'},
 						{Dloc: 'images/temp gallery/b.jpg'}, 
 						{Dloc: 'images/temp gallery/c.jpg'}, 
@@ -74,6 +75,8 @@ app.controller('MainController', ($scope, $http, $sce) => {
 		$scope.max = '400px';
 		$scope.fsize = '15px';
 		$scope.padleft = '0';
+		$scope.vidz = 'https://www.youtube.com/embed/wlsdMpnDBn8';
+		$scope.vidlink = $sce.trustAsResourceUrl($scope.vidz);
 		angular.copy(x.f, $scope.fps)
 		angular.copy(x.pf, $scope.pps)
 	}
