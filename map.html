@@ -21,7 +21,7 @@
 
   <body ng-app="myApp" ng-controller="MainController" ng-init="setfsize()">
     <section id="st-container">
-      <div class="container" style=" height: 100%; width: 100%;">
+      <div class="container" style="">
         <div id="panzoom" class="distribution-map" style="width:964px; height:625px"> 
         	<img class = "mapimg" id = "image1" src="images/map.png" style="height:625px; width:1000">
         	<span ng-repeat="pin in pins">
@@ -187,11 +187,12 @@
       function closePanel() {
           $('.panel-container').removeClass('is-visible');/*
           $panzoom.panzoom("pan", -100, 0, { relative: true });*/
-          /*$panzoom.panzoom("zoom", 1, true);*/
+          /*$panzoom.panzoom("zoom", 2, true);*/
           /*$panzoom.panzoom('zoom', 1, {
             animate: true,
             focal: event
           });*/
+          $panzoom.panzoom("reset");
 
       }
 
@@ -214,11 +215,13 @@
 
         var $section = $('#st-container');
         var $panzoom = $section.find('.container').panzoom({
-           $reset: $("#reset"),
-        });
-        var $panzoom1 = $section.find('.containerz').panzoom({
+            $reset: $section.find("#reset"),
+            /*contain: 'automatic'*/
+          }).panzoom('zoom');
+
+        /*var $panzoom1 = $section.find('.containerz').panzoom({
            $reset: $(".button7"),
-        });
+        });*/
 
         $panzoom.on('mousewheel.focal', function( e ) {
           e.preventDefault();
@@ -244,10 +247,15 @@
               animate: true,
               focal: event
             });*/
-            $panzoom.panzoom('zoom', 3,  {
+            $panzoom.panzoom('zoom', 3, {
               animate: true,
               focal: event
             });
+            $panzoom.panzoom("zoom", 2, {
+              animate: true
+            });
+            /*
+            $panzoom.panzoom("zoom", 2, true);*/
           }
           
         }

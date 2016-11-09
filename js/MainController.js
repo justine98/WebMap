@@ -1,4 +1,4 @@
-app.controller('MainController', ($scope, $http) => {
+app.controller('MainController', ($scope, $http, $sce) => {
 	$scope.title = ''
 	$scope.description = ''
 	$scope.photo = ''
