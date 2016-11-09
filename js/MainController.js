@@ -8,6 +8,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 						{Ploc:'images/floorplans/AS/AS 2ND FLR RIGHT.png', flr: 'R2'}, 
 						{Ploc:'images/floorplans/AS/AS DCS 3RD FLR.png', flr: 'R3'}
 					]
+	$scope.firstD = '';
 	$scope.vidz = '';
 	$scope.vidlink ='';
 	$scope.pps =  [		{Dloc:'images/gallery/Undergrad Building/NsmdCatwalkResized.jpg'},
@@ -27,7 +28,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 							pip: 'images/gallery/Basketball Court/BasketballCourtResized.jpg', pf: [{Dloc:'images/gallery/Basketball Court/BasketballCourtResized.jpg'}, {Dloc:'images/gallery/Basketball Court/BasketballCourtResized.jpg'}, {Dloc:'images/gallery/Basketball Court/BasketballCourtResized.jpg'}],
 							Bldng: 'BASKETBALL COURT', Dscr: 'The Basketball Court is located at the western side of the UP Cebu Lahug Campus, near the Undergraduate Building. and the Management Bldg. It is open to every UP Cebu student who wished to play and/or practice basketball.'},
 						{	t: '35%', l: '26.43%', ip: 'images/floorplans/Management/MANAGEMENT BLDG 1.png', 
-							pip: 'images/gallery/Managemen Building/ManagementResized.jpg', pf: [{Dloc:'images/gallery/Managemen Building/ManagementResized.jpg'}, {Dloc:'images/gallery/Managemen Building/ManagementResized.jpg'}, {Dloc:'images/gallery/Managemen Building/ManagementResized.jpg'}],
+							pip: 'images/gallery/Management Building/ManagementResized.jpg', pf: [{Dloc:'images/gallery/Management Building/ManagementResized.jpg'}, {Dloc:'images/gallery/Management Building/ManagementResized.jpg'}, {Dloc:'images/gallery/Management Building/ManagementResized.jpg'}],
 							f: [{Ploc:'images/floorplans/Management/MANAGEMENT BLDG 1.png', flr: 'B1'}, {Ploc:'images/floorplans/Management/MANAGEMENT BLDG 2.png', flr: 'B2'}], 
 							Bldng: 'MANAGEMENT BUILDING', Dscr: 'The Management Building serves as the main building for Business Management Cluster. It is located at the western side of the UP Cebu Lahug Campus, beside the University Clinic.'},
 						{	t: '55%', l: '20.7%', 
@@ -70,6 +71,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 		$scope.description = x.Dscr;
 		$scope.photo = x.ip;
 		$scope.picture = x.pip;
+		$scope.firstD = x.pf[0].Dloc;
 		$scope.max = '400px';
 		$scope.fsize = '15px';
 		$scope.padleft = '0';

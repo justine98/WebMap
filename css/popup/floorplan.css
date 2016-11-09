@@ -96,6 +96,17 @@
     font-weight: 300;
     font-size: 13pt;
 }
+
+.modal-content .buttonGroup .ulz .button7.redcircle{
+    background-color: #e74c3c;
+    color: white;
+}
+
+.modal-content .buttonGroup .ulz .button7.redcircle:hover{
+    background-color: white;
+    color: #e74c3c;
+}
+
 .modal-content .buttonGroup .ulz .button7:hover{
     background-color: #e74c3c;
     color: white;
