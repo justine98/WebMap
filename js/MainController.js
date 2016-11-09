@@ -32,10 +32,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 							pip: 'images/gallery/Basketball Court/BasketballCourtResized.jpg', pf: [{Dloc:'images/gallery/Basketball Court/BasketballCourtResized.jpg'}, {Dloc:'images/gallery/Basketball Court/BasketballCourtResized.jpg'}, {Dloc:'images/gallery/Basketball Court/BasketballCourtResized.jpg'}],
 							Bldng: 'BASKETBALL COURT', Dscr: 'The Basketball Court is located at the western side of the UP Cebu Lahug Campus, near the Undergraduate Building. and the Management Bldg. It is open to every UP Cebu student who wished to play and/or practice basketball.'},
 						{	t: '35%', l: '26.43%', ip: 'images/floorplans/Management/MANAGEMENT BLDG 1.png', 
-<<<<<<< HEAD
-=======
 							vip: 'https://www.youtube.com/embed/SDTZ7iX4vTQ',
->>>>>>> origin/master
 							pip: 'images/gallery/Management Building/ManagementResized.jpg', pf: [{Dloc:'images/gallery/Management Building/ManagementResized.jpg'}, {Dloc:'images/gallery/Management Building/ManagementResized.jpg'}, {Dloc:'images/gallery/Management Building/ManagementResized.jpg'}],
 							f: [{Ploc:'images/floorplans/Management/MANAGEMENT BLDG 1.png', flr: 'B1'}, {Ploc:'images/floorplans/Management/MANAGEMENT BLDG 2.png', flr: 'B2'}], 
 							Bldng: 'MANAGEMENT BUILDING', Dscr: 'The Management Building serves as the main building for Business Management Cluster. It is located at the western side of the UP Cebu Lahug Campus, beside the University Clinic.'},
