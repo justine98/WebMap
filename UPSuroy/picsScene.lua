@@ -63,13 +63,20 @@ local photoFiles = {
 
 local photosThumbnails = {}
 local photosThumbGroups = {}
-
+local function goBack( event )
+    print("goBack", event.phase)
+    if event.phase == "ended" then
+        composer.hideOverlay( "slideLeft", 150 )
+    end
+    return true
+end
 local function showPhoto(event)
 	if event.phase == "ended" then
         composer.showOverlay("picsoverlay", {time=250, effect="crossFade", params={start=event.target.index, FP=photoFiles}})
 	end
 	return true
 end
+
 
 function scene:create( event )
     print("createph")
@@ -83,11 +90,21 @@ function scene:create( event )
     sceneGroup:insert(background)
     local p = event.params.pin
     assert(p, "Error: pin not set")
+    local leftButton = {
+        onEvent = goBack,
+        width = 59,
+        height = 32,
+        defaultFile = "images/backbutton7_white.png",
+        overFile = "images/backbutton7_white.png",
+        
+    }
     local navBar = widget.newNavigationBar({
         title = "Photos of "..p.label,
         backgroundColor = { 138/255, 13/255, 39/255},
         titleColor = {1, 1, 1},
-        font = myMap.fontBold
+        font = myMap.fontBold,
+        y = 0,
+        leftButton = leftButton,
     })
     sceneGroup:insert(navBar)
 
@@ -95,7 +112,7 @@ function scene:create( event )
     local col = 0
 
     local thumbnailMask = graphics.newMask("images/mask-80x80.png")
-
+    
     local groupOffset = 0
     if tonumber( system.getInfo("build") ) < 2013.2000 then
         groupOffset = 40

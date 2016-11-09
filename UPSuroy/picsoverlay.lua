@@ -20,7 +20,7 @@ local navBar
 local function goBack( event )
 	print("goBack", event.phase)
 	if event.phase == "ended" then
-		composer.hideOverlay( "crossFade", 250 )
+		composer.hideOverlay( "crossFade", 150 )
 	end
 	return true
 end
@@ -52,7 +52,7 @@ function scene:create( event )
 	viewableScreenW = display.contentWidth
 	viewableScreenH = display.contentHeight -- status bar + top bar + tabBar
 		
-    local background = display.newRect(0,0,display.contentWidth, display.contentHeight)
+    local background = display.newRect(0,0,display.contentWidth, display.contentHeight + 30)
     background:setFillColor( 0.95, 0.95, 0.95 )
     background.x = display.contentWidth / 2
     background.y = display.contentHeight / 2
@@ -88,9 +88,10 @@ function scene:create( event )
         --font = myApp.fontBold,
         leftButton = leftButton,
         rightButton = rightButton,
+        y = 0,
     })
     sceneGroup:insert(navBar)
-	
+	print("navBary", navBar.y)
 	images = {}
 
 	for i = 1,#fp do  --if the width of the image is more than the screen's width or if height is more than screen height

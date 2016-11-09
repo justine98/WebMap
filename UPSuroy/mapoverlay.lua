@@ -136,11 +136,12 @@ function scene:create( event )
         title = "VR MAP",
         backgroundColor = { 138/255, 13/255, 39/255 },
         titleColor = {1, 1, 1},
-        --font = myApp.fontBold,
+        font = myMap.fontBold,
         leftButton = leftButton,
-        rightButton = rightButton
+        rightButton = rightButton,
+        y = 0,
     })
-    navBar.y = -40
+    --navBar.y = -40
     sceneGroup:insert(navBar)
 	setSlideNumber()
 	images = {}

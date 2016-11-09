@@ -54,6 +54,7 @@ function scene:create( event )
         titleColor = {1, 1, 1},
         font = myMap.fontBold,
         leftButton = leftButton,
+        y = 0,
     })
     sceneGroup:insert(navBar)
 
@@ -160,9 +161,10 @@ function scene:show( event )
         --local options = { hasBackground=true,  urlRequest=listener }
     --    native.showWebPopup(0, 51 + 60 + 20 + 60, display.contentWidth, 220 + isTall, "story.html", options )
         
-        webView = native.newWebView(0, 71, display.contentWidth, display.contentHeight - 150)
+        webView = native.newWebView(0, 71, display.contentWidth, display.contentHeight)
         webView.x = display.contentCenterX
-        webView.y = navBar.y + 50 + display.topStatusBarContentHeight
+       -- webView.y = navBar.y + 50 + display.topStatusBarContentHeight
+        webView.y = navBar.y + 50 
         webView.anchorY  = 0
         webView:request("story.html", system.TemporaryDirectory)
         webView:addEventListener( "urlRequest", webListener )
