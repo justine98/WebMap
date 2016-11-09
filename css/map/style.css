@@ -1,48 +1,6 @@
 html {
-  background: #1a1a1a;
-  color: #e5e5e5;
   text-align: center;
   font-family: "Roboto", Helvetica, sans-serif;
-
-}
-
-
-.button {
-    outline: none;
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 9px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    font-family: "Roboto Condensed", Helvetica, sans-serif;
-    
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-    cursor: pointer;
-}
-
-.button1 {
-    background-color: white;/*#4CAF50;  Green */
-    border: none;
-    color: black;/*white;*/
-}
-
-.button5 {
-    background-color: white;
-    color: black;
-}
-
-.button5:hover {
-    background-color: grey;
-    color: white;
-}
-
-.button1:hover {
-    background-color: grey;
-    color: white;
 }
 
 body {
@@ -67,7 +25,7 @@ img, footer {
 }
 
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5 {
   margin-bottom: 20px;
   text-transform: uppercase;
   font-family: "Roboto Condensed", Helvetica, sans-serif;
@@ -140,12 +98,70 @@ section{
 
 .margin-div{
   position: absolute;
-  bottom: 2%;
-  left: 1%;
-
-  padding-top:5px;
+  height: auto;
+  top: 30px;
+  right: 30px;
 }
 
+.margin-div .button1 {
+  width: 70px;
+  height: 70px;
+  margin-top: 10px;
+  margin-right: 20px;
+
+  border-radius: 50%;
+  padding-top: 4px;
+  outline: none;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-family: "Roboto Condensed", Helvetica, sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  background-color: #e74c3c;
+  border: none;
+  color: black;/*white;*/
+}
+
+.margin-div .button5 {
+  width: 70px;  
+  height: 70px;
+  margin-top: 10px;
+  margin-right: 20px;
+
+  border-radius: 50%;
+  outline: none;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-family: "Roboto Condensed", Helvetica, sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  background-color: #e74c3c;
+  color: black;
+}
+
+.margin-div .button5:hover {
+    background-color: grey;
+    color: white;
+}
+
+.margin-div .button1:hover {
+    background-color: grey;
+    color: white;
+}
 .centered {
   position: absolute;
   top: 50%;
@@ -177,7 +193,7 @@ section{
 .distribution-map .map-point {
   background-color: Transparent;
   background-repeat:no-repeat;
-  width: 30px;
+  width: 50px;
   height: 50px;
   position: absolute;
 }

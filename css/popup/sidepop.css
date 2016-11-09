@@ -1,0 +1,144 @@
+.panel-container{
+	position: fixed; 
+	left: 0; 
+	top: 0;
+	height: 100%;
+	width: 100%;
+
+	opacity: 0;
+	visibility: hidden;
+	-webkit-transition: opacity 0.5s 0s, visibility 0s 0.5s;
+	-moz-transition: opacity 0.5s 0s, visibility 0s 0.5s;
+	transition: opacity 0.5s 0s, visibility 0s 0.5s;
+}
+
+.panel-container.is-visible {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: opacity 0.5s 0s, visibility 0s 0s;
+  -moz-transition: opacity 0.5s 0s, visibility 0s 0s;
+  transition: opacity 0.5s 0s, visibility 0s 0s;
+}
+
+.panel{
+	position: fixed;
+	width: 100%;
+  	height: 100%;
+
+  	background: #FFF;
+
+  	overflow-y: auto;
+  	overflow-x: hidden;
+
+  	text-align: center;
+  	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.panel .des {
+	text-align: left;
+	width: 90%;
+	margin: 20px;
+	margin-top: 100px;
+}
+
+.panel .des > h7{
+	color: grey;
+	font-family: "Roboto Condensed", Helvetica, sans-serif;
+  	font-weight: bold;
+  	font-size: 15pt;
+}
+
+.panel .des > p{
+	line-height: 2;
+	margin-top: 10px;
+	color: black;
+	font: 15px arial, sans-serif;
+}
+
+.panel .rect{
+	/*margin: 5%;*/
+	height: 250px;
+	width: 100%;
+	background-color: #e74c3c;
+	vertical-align: center;
+	overflow: hidden;
+}
+
+.panel .rect > img{
+
+}
+
+.panel .name{
+	height:60px;
+	width: 100%;
+	vertical-align: center;
+	line-height: 60px;
+	background-color: #e74c3c;
+}
+
+.panel .name > h6{
+	color: white;
+	text-transform: uppercase;
+  	font-family: "Roboto Condensed", Helvetica, sans-serif;
+  	font-weight: 300;
+  	font-size: 20pt;
+}
+
+.panel .list{
+	position: absolute;
+	width: 100%;
+	height: 100px;
+	/*margin: 20px;*/
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+.panel .list .lul{
+	width: auto;
+	list-style-type: none;
+    overflow: hidden;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.panel .list .lul .butt{
+	position: relative;
+	height: 70px;
+	width: 50px;
+	margin-bottom: 5px;
+	margin-right: 9.5%;
+	margin-left: 9.5%;
+	background-color: transparent;
+    padding: 0, 0;
+	float: left;
+	display: block;
+}
+
+.panel .list .lul .butt > p{
+	color: #e74c3c;
+	text-transform: uppercase;
+  	font-family: "Roboto Condensed", Helvetica, sans-serif;
+  	font-weight: 300;
+  	font-size: 12pt;
+}
+
+.panel .list .lul .butt:hover{
+	opacity: 0.5;
+}
+
+.panel .EX{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	color: white;
+	background-color: Transparent;
+  	background-repeat:no-repeat;
+  	width: 50px;
+  	height: 50px;
+}
+
+.panel .EX:hover{
+	opacity: 0.7;
+}
+
