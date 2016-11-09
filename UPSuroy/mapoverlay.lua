@@ -67,7 +67,17 @@ function scene:create( event )
    -- sharingPanel = widget.newSharingPanel({
     --	})
 
-    
+    local vtPress = function(event)
+    	local story = {
+    		title = "UP video thingy",
+    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
+    		content_encoded = "content encoded sumthing",
+    		description = "something description",
+
+    	}
+    	composer.showOverlay("videoScene", {time = 100, effect = "slideRight", params= {story = story}})
+
+	end
     local descPress = function( event )
     if descPressed == 0 then
 		 textbox = native.newTextBox(display.contentWidth/2, 70, display.contentWidth,100)
@@ -165,7 +175,7 @@ function scene:create( event )
 		{
 			defaultFile = "Button_videos.png",
 			overFile = "Button_videosPressed.png",
-			--onPress = vtPress,
+			onPress = vtPress,
 			--onRelease = button1Release,
 		}
 		videoButton.x = display.contentWidth/2; videoButton.y = 440
