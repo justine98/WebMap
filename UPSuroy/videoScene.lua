@@ -112,8 +112,8 @@ function scene:show( event )
                 fh:write("<h1>" .. story.title .. "</h1>\n")
             end
             if story.link then 
-                local videoID = story.link:sub(32, 42)
-                --print(videoID)
+                local videoID = story.link:sub(33)
+                print(videoID)
                 local height = math.floor(display.contentWidth / 16 * 9)
                 fh:write([[<iframe width="100%" height="]] .. height .. [[" src="http://www.youtube.com/embed/]] .. videoID .. [[?html5=1" frameborder="0" allowfullscreen></iframe>]])
             end
