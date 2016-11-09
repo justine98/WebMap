@@ -103,6 +103,10 @@ section{
   right: 30px;
 }
 
+/*.margin-div .ulx{
+  float: bottom;
+}*/
+
 .margin-div .button1 {
   width: 70px;
   height: 70px;
@@ -116,7 +120,7 @@ section{
   color: white;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: block;
   font-size: 16px;
   font-family: "Roboto Condensed", Helvetica, sans-serif;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -141,7 +145,7 @@ section{
   color: white;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: block;
   font-size: 16px;
   font-family: "Roboto Condensed", Helvetica, sans-serif;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -154,13 +158,13 @@ section{
 }
 
 .margin-div .button5:hover {
-    background-color: grey;
-    color: white;
+  background-color: grey;
+  color: white;
 }
 
 .margin-div .button1:hover {
-    background-color: grey;
-    color: white;
+  background-color: grey;
+  color: white;
 }
 .centered {
   position: absolute;

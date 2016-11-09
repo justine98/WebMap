@@ -26,7 +26,7 @@
         	<img class = "mapimg" id = "image1" src="images/map.png" style="height:625px; width:1000">
         	<span ng-repeat="pin in pins">
   	      	<div class="cd-popup-trigger">
-  	      		<button class="map-point" style="top:{{pin.t}};left:{{pin.l}}; height:1px, width:1px" data-effect="st-effect-1" onclick="hey()" ng-click="setDetails(pin)" ng-touchstart="onTouchstart(pin)" title="{{pin.Bldng}}">
+  	      		<button class="map-point" style="top:{{pin.t}};left:{{pin.l}}; height:1px, width:1px" data-effect="st-effect-1" onclick="hey(event)" ng-click="setDetails(pin)" ng-touchstart="onTouchstart(pin)" title="{{pin.Bldng}}">
   	           	<img id = "image1" src="images/pin.png" width="50" height="50" style="right:11px">
   	          </button>
   	        </div>
@@ -35,8 +35,10 @@
       </div>
 
       <div class="margin-div">
+        <!-- <ul class="ulx"> -->
         <button class="button1" style="{{deets}}" id="reset" title="Reset the Map"><img src="images/reload.png" style="height: 30px; width: 30px;"></button>
         <button class="button5" style="{{deets}}" onclick=newDoc() title="Go to Home Page"><img src="images/home.png"  style="height: 30px; width: 30px;"></button>
+        <!-- </ul> -->
       </div>
 
       <div class="modal" id="myModal" >
@@ -65,6 +67,18 @@
           </div>
         </div>
       </div>
+
+      <div class="modal" id="myModal1" >
+        <div class="modal-content" style="background-color: white;">
+
+        </div>
+      </div>
+
+      <div class="modal" id="myModal2" >
+        <div class="modal-content" style="background-color: black;">
+
+        </div>
+      </div>
     </section>
 
     <div class="panel-container" style="max-width: {{ max }}">
@@ -82,17 +96,17 @@
               <img src="images/directory.png" style="height: 50px; width: 50px">
               <p style="position: relative; left: -3px;">Rooms</p>
             </button> -->
-            <button class="butt" id = "directory" title="Room Directory" style="font-size: {{ fsize }};" >
+            <button class="butt" id = "directory" onclick="openRoom()" title="Room Directory" style="font-size: {{ fsize }};" >
               <img src="images/directory.png" style="height: 50px; width: 50px">
               <p style="position: relative; left: -3px;">Rooms</p>
             </button>
 
-            <button class="butt" id="photo" title="Photo Gallery" style="font-size: {{ fsize }};">
+            <button class="butt" id="photo" title="Photo Gallery" onclick="openPhoto()" style="font-size: {{ fsize }};">
               <img src="images/photos.png" style="height: 50px; width: 50px">
               <p style="position: relative; left: -6px;">Photos</p>
             </button> 
 
-            <button class="butt" id="video" title="Videos" style="font-size: {{ fsize }};">
+            <button class="butt" id="video" title="Videos" onclick="openVideo()" style="font-size: {{ fsize }};">
               <img src="images/video.png" style="height: 50px; width: 50px">
               <p>Videos</p>
             </button>
@@ -115,7 +129,7 @@
     </script>
 
     <script id="Modes">    
-      var modal = document.getElementById('myModal');
+      /*var modal = document.getElementById('myModal');
       var btn = document.getElementById("directory");
       btn.onclick = function() {
           $('.modal').addClass('visible');
@@ -125,6 +139,44 @@
           $('.modal').removeClass('visible');
         }
       }
+
+      var modal1 = document.getElementById('myModal1');
+      var btn1 = document.getElementById("photo");
+      btn1.onclick = function() {
+          $('.modal').addClass('visible');
+      }
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          $('.modal').removeClass('visible');
+        }
+      }*/
+      function openRoom(){
+        $($('.modal')[0]).addClass('visible');
+      }
+
+      function openPhoto(){
+        $($('.modal')[1]).addClass('visible');
+      }
+
+      function openVideo(){
+        $($('.modal')[2]).addClass('visible');
+      }
+      var modal = document.getElementById('myModal');
+      var modal1 = document.getElementById('myModal1');
+      var modal2 = document.getElementById('myModal2');
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          $($('.modal')[0]).removeClass('visible');
+        } 
+        if (event.target == modal1) {
+          $($('.modal')[1]).removeClass('visible');
+        } 
+        if (event.target == modal2) {
+          $($('.modal')[2]).removeClass('visible');
+        } 
+      }
+
+
     </script>
 
     <script id="MapNeeds">   
@@ -133,9 +185,14 @@
       }
 
       function closePanel() {
-          $('.panel-container').removeClass('is-visible');
-          $panzoom.panzoom("pan", -100, 0, { relative: true });
-          $panzoom.panzoom("zoom", 1, true);
+          $('.panel-container').removeClass('is-visible');/*
+          $panzoom.panzoom("pan", -100, 0, { relative: true });*/
+          /*$panzoom.panzoom("zoom", 1, true);*/
+          /*$panzoom.panzoom('zoom', 1, {
+            animate: true,
+            focal: event
+          });*/
+
       }
 
       function closeModal() {
@@ -174,23 +231,26 @@
           });
         });
 
-        /*$panzoom.on('click', function(e){
-            $panzoom.panzoom("pan", 10, -10, { relative: true });
-        });*/
-
-        function hey(){
+        function hey(event){
           if($('.panel-container').hasClass('is-visible')){
-            
+            /*$panzoom.panzoom('zoom', 1, true);
+            $panzoom.panzoom('zoom', 2,  {
+              animate: true,
+              focal: event
+            });*/
           } else {
-            $panzoom.panzoom("pan", 100, 0, { relative: true });
-            $panzoom.panzoom("zoom", 2);
+            /*$panzoom.panzoom("pan", 100, 0, { relative: true });*/
+            /*$panzoom.panzoom('zoom', 3,  {
+              animate: true,
+              focal: event
+            });*/
+            $panzoom.panzoom('zoom', 3,  {
+              animate: true,
+              focal: event
+            });
           }
-          /*panZoom.pan({x:0,y:0});*/
+          
         }
-
-        /*$('.map-point').on('click', function(e){
-          alert("bitch!");
-        })*/
 
         $panzoom1.on('mousewheel.focal', function( e ) {
           e.preventDefault();
