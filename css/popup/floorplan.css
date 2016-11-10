@@ -34,12 +34,12 @@
     /*position: center;*/
     height: 100%;
     width: 100%;
-    background-color: #fefefe;
-    position: center;
-    /*padding: 0;*/
+    background-color: #fefefe;/*
+    position: center;*/
+    padding: 0;
     overflow-y: hidden;
-
-    vertical-align: center;
+/*
+    vertical-align: center;*/
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
@@ -126,6 +126,48 @@
     background-color: white;
 }
 
+.modal-footer{
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 2.5%;
+    margin-bottom: 2.5%; 
+    margin-top: 2.5%; 
+    width: 20%;
+    float: left;
+    display: inline-block;
+    overflow-x: hidden;
+    height: 89.7%;
+    background-color: #e74c3c;
+}
+
+.modal-footer .ulc{
+    width: auto;
+}
+
+.modal-footer .ulc > input{
+    /*margin: auto*/
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.modal-content .modal-image{
+    padding-top: 6%;
+    overflow:auto;
+    background-color: white;
+    line-height: 100%;
+    width: 75%;
+    position: absolute;
+    margin-left: 2.5%;
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+    left: 0;
+    top: 0;
+    height: 89.7%;
+}
+
+
+
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
@@ -158,9 +200,9 @@
     background-color: #5cb85c;
     color: white;
 }
-
+/*
 .modal-footer {
     padding: 2px 16px;
     background-color: #5cb85c;
     color: white;
-}
+}*/
