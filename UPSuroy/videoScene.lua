@@ -54,7 +54,7 @@ function scene:create( event )
         titleColor = {1, 1, 1},
         font = myMap.fontBold,
         leftButton = leftButton,
-        y = 0,
+        y = -20,
     })
     sceneGroup:insert(navBar)
 
