@@ -84,10 +84,10 @@ function scene:create( event )
     }
     local navBar = widget.newNavigationBar({
         title = "Photos of "..p.label,
-        backgroundColor = { 138/255, 13/255, 39/255},
+        backgroundColor = { 231/255, 76/255, 60/255},
         titleColor = {1, 1, 1},
         font = myMap.fontBold,
-        y = 0,
+        y = -20,
         leftButton = leftButton,
     })
     sceneGroup:insert(navBar)

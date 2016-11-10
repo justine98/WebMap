@@ -88,7 +88,7 @@ function scene:create( event )
         --font = myApp.fontBold,
         leftButton = leftButton,
         rightButton = rightButton,
-        y = 0,
+        y = -20,
     })
     sceneGroup:insert(navBar)
 	print("navBary", navBar.y)
@@ -217,7 +217,7 @@ function scene:create( event )
 			-- 			-- refresh tracking dot scale and rotation values
 			-- 			updateTracking( background.prevCentre, background.dots )
 			-- 		end
-				end
+				
 	
 						
 				if tween then transition.cancel(tween) end
@@ -260,7 +260,7 @@ function scene:create( event )
                 return true
 														
 			end
-		
+		end 
 					
 		return false
 		

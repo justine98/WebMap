@@ -177,7 +177,7 @@ function scene:create( event )
 			onPress = vtPress,
 			--onRelease = button1Release,
 		}
-		videoButton.x = display.contentWidth/2; videoButton.y = 450
+		videoButton.x = roomsButton.x -100; videoButton.y = 450
 		sceneGroup:insert(videoButton)
 		
 		picsButton = widget.newButton
@@ -187,7 +187,7 @@ function scene:create( event )
 			onPress = picsPress,
 			--onRelease = button1Release,
 		}
-		picsButton.x = videoButton.x + 100; picsButton.y = 450
+		picsButton.x = roomsButton.x + 100; picsButton.y = 450
 		sceneGroup:insert(picsButton)
 
 	
