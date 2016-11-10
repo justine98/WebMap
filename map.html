@@ -248,13 +248,13 @@
       function changePin(n){
         var dots = document.getElementsByClassName('pinImg');
         for (i = 0; i < dots.length; i++) {
-          /*$($('.pinImg')[i]).attr('src', 'images/pin.png');*/
+          $($('.pinImg')[i]).attr('src', 'images/pin.png');
           $($('.pinImg')[i]).attr('width', '50');
           $($('.pinImg')[i]).attr('height', '50');
           $($('.pinImg')[i]).attr('style', 'right:12px');
           
-        }/*
-        $($('.pinImg')[n]).attr('src', 'images/pin-chosen.png');*/
+        }
+        $($('.pinImg')[n]).attr('src', 'images/pin-chosen.png');
         $($('.pinImg')[n]).attr('width', '70');
         $($('.pinImg')[n]).attr('height', '70');
         $($('.pinImg')[n]).attr('style', 'right: 22px; bottom: 20px;');
