@@ -62,12 +62,16 @@ function scene:create(event)
 end
 function scene:show(event)
 	local sceneGroup = self.view
+	print("show:", event.phase)
 end
 function scene:hide(event)
 	local sceneGroup = self.view
+	print("hide:", event.phase)
+	rect:removeEventListener("touch", rect)
 end
 function scene:destroy(event)
 	local sceneGroup = self.view
+	print("destroy:", event.phase)
 	-- body
 end
 

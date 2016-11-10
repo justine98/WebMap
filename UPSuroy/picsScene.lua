@@ -43,30 +43,14 @@ local myMap = require("mymap")
 
 --local slideView = require( "slideView" )
 
-local photoFiles = {
-	"photos/Arch01.jpg",
-	"photos/Biloxi05.jpg",
-	"photos/Butterfly01.jpg",
-	"photos/DSC6722.jpg",
-	"photos/DSC_7743.jpg",
-	"photos/ElCap.jpg",
-	"photos/FlaKeysSunset.jpg",
-	"photos/MaimiSkyline.jpg",
-	"photos/MtRanier8x10.jpg",
-	"photos/Tulip.jpg",
-	"photos/WhiteTiger.jpg",
-	"photos/Yosemite Valley.jpg",
-	"photos/Yosemite2013_Mule_Deer04.jpg",
-	"photos/bfly2.jpg",
-	"photos/bodieIsland.jpg",
-}
+local photoFiles
 
 local photosThumbnails = {}
 local photosThumbGroups = {}
-local function goBack( event )
+function goBack( event )
     print("goBack", event.phase)
     if event.phase == "ended" then
-        composer.hideOverlay( "slideLeft", 150 )
+        composer.hideOverlay( "fade", 250 )
     end
     return true
 end
@@ -86,7 +70,7 @@ function scene:create( event )
     background:setFillColor( 0.95, 0.95, 0.95 )
     background.x = display.contentWidth / 2
     background.y = display.contentHeight / 2
-
+    photoFiles = event.params.photos
     sceneGroup:insert(background)
     local p = event.params.pin
     assert(p, "Error: pin not set")

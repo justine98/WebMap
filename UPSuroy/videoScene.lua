@@ -50,7 +50,7 @@ function scene:create( event )
 
     navBar = widget.newNavigationBar({
         title = title,
-        backgroundColor = { 138/255, 13/255, 39/255 },
+        backgroundColor = { 231/255, 76/255, 60/255 },
         titleColor = {1, 1, 1},
         font = myMap.fontBold,
         leftButton = leftButton,
@@ -85,7 +85,7 @@ function scene:show( event )
         -- table.
         local function playPodcast()
             --print("playPodcast", story.link)
-            media.playVideo( "https://www.youtube.com/watch?v=N6jWu82_NoE", media.RemoteSource, true, onComplete )
+            media.playVideo(story.link, media.RemoteSource, true, onComplete )
             return true
         end
         
