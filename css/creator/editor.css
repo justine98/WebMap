@@ -1,0 +1,186 @@
+html, body, section{
+	height: 100%;
+    position: relative;
+    padding: 0%;
+    margin: 0%;
+}
+
+@font-face {
+font-family: 'Bebas Neue';
+font-style: normal;
+font-weight: normal;
+src: local('../../fonts/BebasNeue.woff') format('woff');
+}
+
+section{
+	position: relative;
+	background-color:silver;
+	background-image: 
+	radial-gradient(circle at 100% 150%, silver 24%, white 25%, white 28%, silver 29%, silver 36%, white 36%, white 40%, transparent 40%, transparent),
+	radial-gradient(circle at 0    150%, silver 24%, white 25%, white 28%, silver 29%, silver 36%, white 36%, white 40%, transparent 40%, transparent),
+	radial-gradient(circle at 50%  100%, white 10%, silver 11%, silver 23%, white 24%, white 30%, silver 31%, silver 43%, white 44%, white 50%, silver 51%, silver 63%, white 64%, white 71%, transparent 71%, transparent),
+	radial-gradient(circle at 100% 50%, white 5%, silver 6%, silver 15%, white 16%, white 20%, silver 21%, silver 30%, white 31%, white 35%, silver 36%, silver 45%, white 46%, white 49%, transparent 50%, transparent),
+	radial-gradient(circle at 0    50%, white 5%, silver 6%, silver 15%, white 16%, white 20%, silver 21%, silver 30%, white 31%, white 35%, silver 36%, silver 45%, white 46%, white 49%, transparent 50%, transparent);
+	background-size:50px 25px;
+	height: 100%;
+	width: 100%;
+}
+
+.toolbar{
+	position: fixed;
+	height: 100%;
+	width: 7%;
+	top: 0;
+	left: 0;
+	background-color: black;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+
+.toolbar .toolPanel{
+	padding-top: 20%;
+	height: 100%;
+	width: 100%;
+	background-color: #1f1918;
+}
+
+.pinHolder{
+	align-self: center;
+	display: flex;
+  	justify-content: center;
+  	width: 80px;
+  	height: 80px;
+  	border-radius: 50%;
+  	background-color: #d3d3d3;
+  	margin: auto;
+}
+
+.pinTool{
+	align-self: center;
+	display: flex;
+  	justify-content: center;
+  	margin: auto;
+}
+
+.pin{
+  	position: absolute;
+  	text-align: center;
+  	vertical-align: center;
+}
+
+.pinImg{
+	align-self: center;
+}
+
+.bldng{
+	position: absolute;
+	margin: 0%;
+	padding: 0%;
+	letter-spacing: 1px;
+	font-family: 'Bebas Neue';
+	font-weight:normal;
+	color: black;
+	left: 0px; 
+}
+
+.pinButton{
+	position: absolute;
+	align-self: center;
+	height: 50px;
+	width: 30px;
+	background-color: transparent;
+	border: none;
+	border-radius: 40%;
+}
+
+.toolContent{
+	align-self: center;
+	display: flex;
+  	justify-content: center;
+}
+
+.inputBox{
+	max-width: 80px;
+	margin-top: 50px;
+}
+
+.submitUrl{
+	margin-top: 20px;
+}
+
+/*.pinClone{
+	display: flex;
+  	justify-content: center;
+	position: relative;
+}
+
+.pinClone:hover {
+	height: 80px;
+	width: 80px;
+	background-color: white;
+}
+
+.pinClone:hover + .pindelete {
+	display: block;
+}
+
+.pindelete{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	display: none;
+	color: red;
+}
+
+.pindelete:hover {
+	display: block;
+}*/
+
+.editBody{
+	align-self: center;
+	display: flex;
+  	justify-content: center;
+	position: fixed;
+	height: 100%;
+	width: 93%;
+	top: 0;
+	right: 0;
+	background-color: transparent;
+}
+
+.mapCanvas{
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0.2;
+	background-color: red;
+}
+
+.map-container{
+	position: relative;
+	align-self: center;
+}
+
+.trashcan{
+	position: fixed;
+	height: 100px;
+	width: 100px;
+	bottom: 20px;
+	right: 20px;
+	background-color: #e74c3c;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+	border-radius: 50%;
+	display: flex;
+  	justify-content: center;
+  	opacity: 0.5;
+}
+
+.trashcan .trashImg{
+	height: 50px;
+	width: 50px;
+	align-self: center;
+}
+
+.trashcan:hover {
+	opacity: 1;
+}

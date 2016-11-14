@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta charset="UTF-8">
-
     <title>UPC INTERACTIVE MAP</title>
     <link rel="stylesheet" href="css/map/reset.css">
     <link rel="stylesheet" href="css/map/style.css">
@@ -20,10 +19,10 @@
   </head>
 
   <body ng-app="myApp" ng-controller="MainController" ng-init="setfsize()">
-    <section id="st-container">
-      <div class="container" style="">
-        <div id="panzoom" class="distribution-map" style="width:964px; height:625px"> 
-        	<img class = "mapimg" id = "image1" src="images/map.png" style="height:625px; width:1000">
+    <section id="st-container" >
+      <div class="container" style="background-color: white;">
+        <div id="panzoom" class="distribution-map"> 
+        	<img class = "map" id = "image1" src="{{ map }}" onload="setSizes()">
         	<span ng-repeat="pin in pins">
   	      	<div class="cd-popup-trigger">
   	      		<button class="map-point" style="top:{{pin.t}};left:{{pin.l}}; height:1px, width:1px; " data-effect="st-effect-1" id="{{$index}}" onclick="hey(event); changePin(this.id)" ng-click="setDetails(pin)" ng-touchstart="onTouchstart(pin)" title="{{pin.Bldng}}">
@@ -35,10 +34,21 @@
       </div>
 
       <div class="margin-div">
-        <!-- <ul class="ulx"> -->
+        <ul class="ulx">
         <button class="button1" style="{{deets}}" id="reset" title="Reset the Map"><img src="images/reload.png" style="height: 30px; width: 30px;"></button>
+        </ul>
+        <ul class="ulx">
         <button class="button5" style="{{deets}}" onclick=newDoc() title="Go to Home Page"><img src="images/home.png"  style="height: 30px; width: 30px;"></button>
-        <!-- </ul> -->
+        </ul>
+        <ul class="ulx">
+        <button class="zoom" id="zoomIn">+</button>
+        </ul>
+        <ul class="ulx">
+        <input type="range" class="Range" orient="vertical">
+        </ul>
+        <ul class="ulx">
+        <button class="zoom" id="zoomOut">-</button>
+        </ul>
       </div>
 
       <div class="modal" id="myModal" >
@@ -52,7 +62,7 @@
                 <div id="panzoom" class="distribution-map" style="max-width: 70%;" > 
                   <div class="fp-content fp-display-container" >
                       <img src={{photo}} style="width: 100%;">
-                    </div>
+                  </div>
                 </div>
               </div>
             </section>
@@ -68,7 +78,7 @@
         </div>
       </div>
 
-     <div class="modal" id="myModal1" >
+      <div class="modal" id="myModal1" >
         <div class="modal-content" style="background-color: white;">
           <div class="modal-image" >
             <img style="margin-top:20px" src={{picture}} style="width:100% height:30%">
@@ -104,18 +114,16 @@
         </div>
       </div>
 
-
-
       <div class="modal" id="myModal2" >
         <div class="modal-content" style="background-color: white;">
-        <iframe style= "margin-top: 40px;" width="854" height="480" src={{vidlink}} allowfullscreen></iframe>
-      <div class="buttonGroup">
-        <ul class="ulz">
-          <button title="Collapse Modal" onclick="closeModal()" class="closeMod"><img src="images/back.png" style="width: 35px; height: 35px"></button>
-        </ul>
-     </div>
-    </div>
-  </div>
+          <iframe style= "margin-top: 40px;" width="854" height="480" src={{vidlink}} allowfullscreen></iframe>
+          <div class="buttonGroup">
+            <ul class="ulz">
+              <button title="Collapse Modal" onclick="closeModal()" class="closeMod"><img src="images/back.png" style="width: 35px; height: 35px"></button>
+            </ul>
+          </div>
+        </div>
+      </div>
 
     </section>
 
@@ -229,6 +237,89 @@
     </script>
 
     <script id="MapNeeds">
+      function setSizes(){
+        var img = new Image();
+        img.onload = function(){
+          x = this.width;
+          y = this.height;
+
+          if(x > window.innerWidth || y > window.innerHeight){
+            if(x > y){
+              z = window.innerWidth;
+              y = y/(x/z);
+              x = z;
+              if(y > window.innerHeight){
+                z = window.innerHeight;
+                x = x/(y/z);
+                y = z;
+              } else {
+                x = z;
+              }
+
+            } else {
+              z = window.innerHeight;
+              x = x/(y/z);
+              if(x > window.innerWidth){
+                z = window.innerWidth;
+                y = y/(x/z);
+                x = z;
+              } else {
+                y = z;
+              }
+            }
+          }
+
+          $('.map').attr("width", x);
+          $('.map').attr("height", y);
+          $('.container').attr("style", "height: " + y + "px;" + "width: " + x + "px;");
+        }
+        img.src = ('images/map.png');
+      }
+
+
+
+      /*function setSizes(){
+        x = $('#image1').width;
+        y = $('#image1').height;
+
+        alert(x + " " + y);
+
+        if(x > window.innerWidth || y > window.innerHeight){
+          if(x > y){
+            z = window.innerWidth;
+            y = y/(x/z);
+            x = z;
+            if(y > window.innerHeight){
+              z = window.innerHeight;
+              x = x/(y/z);
+              y = z;
+            } else {
+              x = z;
+            }
+
+          } else {
+            z = window.innerHeight;
+            x = x/(y/z);
+            if(x > window.innerWidth){
+              z = window.innerWidth;
+              y = y/(x/z);
+              x = z;
+            } else {
+              y = z;
+            }
+          }
+        }
+        $('#panzoom').style.height = y;
+        $('#panzoom').style.width = x;
+        $('#image1').width = x;
+        y = $('#image1').height = y;
+
+
+
+        $('.container').style.height = window.innerHeight;
+        $('.container').style.width = $('#image1').naturalwidth;
+      }*/
+
       function newDoc() {
           window.location.assign("/")
       }
@@ -295,9 +386,13 @@
 
         var $section = $('#st-container');
         var $panzoom = $section.find('.container').panzoom({
-            $reset: $section.find("#reset"),
-            /*contain: 'automatic'*/
-          }).panzoom('zoom');
+          minScale: 1,
+          $zoomIn: $section.find("#zoomIn"),
+          $zoomOut: $section.find("#zoomOut"),
+          $zoomRange: $section.find(".Range"),
+          $reset: $section.find("#reset"),
+          /*contain: 'automatic'*/
+        }).panzoom('zoom');
 
         var $panzoom1 = $section.find('.containerz').panzoom({
            $reset: $(".button7"),
@@ -320,7 +415,7 @@
             var h = (window.innerHeight)/2;
             var x = event.clientX;
             var y = event.clientY;
-            x = (w-x);
+            x = (w-x) + 190;
             y = (h-y);
           if($('.panel-container').hasClass('is-visible')){
             /*$panzoom.panzoom('zoom', 1, true);
@@ -367,7 +462,6 @@
 
 
     </script>
-    <script src="js/angular.js"></script>
     <script src="js/popup.js"></script>
     <script src="js/app.js"></script>
     <script src="js/MainController.js"></script> 

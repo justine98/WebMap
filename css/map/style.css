@@ -94,24 +94,56 @@ section{
   height: 100%;
   width: 100%;
   background: rgba(70, 151, 70, 1);
+  justify-content: center;
+  text-align: center;
 }
 
 .margin-div{
   position: absolute;
-  height: auto;
+  /*height: auto;*/
   top: 30px;
   right: 30px;
+  height: 100%;
+}
+
+.container{/*
+  position: absolute;*/
+  margin: auto;
+  align-self: center;
 }
 
 /*.margin-div .ulx{
   float: bottom;
 }*/
 
-.margin-div .button1 {
+.margin-div .ulx{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  width: 70px;
+}
+
+.margin-div .zoom{
+  height: 30px;
+  width: 30px;
+  align-self: center;
+  display: block;
+  border-radius: 50%;
+
+  
+}
+
+.margin-div .Range{
+  align-self: center;
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+  width: 70px;
+}
+
+.button1 {
+  align-self: center;
   width: 70px;
   height: 70px;
-  margin-top: 10px;
-  margin-right: 20px;
 
   border-radius: 50%;
   padding-top: 4px;
@@ -133,11 +165,10 @@ section{
   color: black;/*white;*/
 }
 
-.margin-div .button5 {
+.button5 {
+  align-self: center;
   width: 70px;  
   height: 70px;
-  margin-top: 10px;
-  margin-right: 20px;
 
   border-radius: 50%;
   outline: none;
@@ -157,12 +188,12 @@ section{
   color: black;
 }
 
-.margin-div .button5:hover {
+.button5:hover {
   background-color: grey;
   color: white;
 }
 
-.margin-div .button1:hover {
+.button1:hover {
   background-color: grey;
   color: white;
 }
@@ -184,14 +215,13 @@ section{
 
 .distribution-map {
   position: relative;
-  height: 100%;
-  margin: auto;
+  align-self: center;
 
 }
 .distribution-map > img {
   position: relative;
-  height: 100%;
   margin: auto;
+  align-self: center;
 }
 
 .distribution-map .map-point {
