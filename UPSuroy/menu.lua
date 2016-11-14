@@ -11,7 +11,7 @@ local scene = composer.newScene()
 
 function scene:create(event)
 	sceneGroup = self.view
-	print("in menu")
+	print("menu:created")
 	local bgGroup = display.newGroup()
 	--local mapGroup = display.newGroup()
 	menuGroup = display.newGroup()
@@ -62,12 +62,16 @@ function scene:create(event)
 end
 function scene:show(event)
 	local sceneGroup = self.view
+	print("menu show:", event.phase)
 end
 function scene:hide(event)
 	local sceneGroup = self.view
+	print("menu hide:", event.phase)
+	rect:removeEventListener("touch", rect)
 end
 function scene:destroy(event)
 	local sceneGroup = self.view
+	print("menu destroy:", event.phase)
 	-- body
 end
 
@@ -90,11 +94,6 @@ end
 
 
 
-function testfunc(event)
-	if event.phase =='began' then 
-		print("testfunc")
-	end
-end 
 function menuPress( event )
 	print("menu")
 	if event.phase == "began" then
@@ -112,13 +111,6 @@ function menuPress( event )
 			--onRelease = button1Release,
 		}
 		abButton.x = menubg.width/2; abButton.y = 102
-		-- vmButton = widget.newButton
-		-- {
-		-- 	defaultFile = "Button_vm.png",
-		-- 	overFile = "Button_vmPressed.png",
-		-- 	onPress =  myMap.showScreen1
-		-- }
-		-- vmButton.x = display.contentCenterX; vmButton.y = 70
 		
 		vtButton = widget.newButton
 
@@ -145,14 +137,6 @@ function menuPress( event )
 			--onRelease = button1Release,
 		}
 		helpButton.x = menubg.width/2; helpButton.y = infoButton.y + 111
-		-- ctButton = widget.newButton
-		-- {
-		-- 	defaultFile = "Button_ct.png",
-		-- 	overFile = "Button_ctPressed.png",
-		-- 	--onPress = button1Press,
-		-- 	--onRelease = button1Release,
-		-- }
-		-- ctButton.x = display.contentCenterX; ctButton.y = vtButton.y + 80
 		
 		sceneGroup:insert(menubg)
 		sceneGroup:insert(abButton)
@@ -161,9 +145,6 @@ function menuPress( event )
 		sceneGroup:insert(infoButton)
 		menuUp = true
 	else
-		--local background = display.newImage(bgGroup, "Button_info.png", false)
-		--background.x = display.contentCenterX
-		--background.y = display.contentCenterY
 		menubg:removeSelf()
 		abButton:removeSelf()
 		helpButton:removeSelf()
@@ -173,21 +154,6 @@ function menuPress( event )
 	end
 	return true
 end
-
--- function myMap.showScreen1()
--- 	print('before')
--- 	-- menubg:removeSelf()
--- 	-- 	vmButton:removeSelf()
--- 	-- 	ctButton:removeSelf()
--- 	-- 	vtButton:removeSelf()
--- 	-- 	infoButton:removeSelf()
--- 	-- 	background:removeSelf()
--- 	composer.removeHidden()
---  	composer.gotoScene('mapscene',  {time=250, effect="crossFade"})
---  	print('done doing')
---  return true
--- end
-
 
 
 local function fitImage( displayObject, fitWidth, fitHeight, enlarge )
@@ -325,7 +291,7 @@ function newTrackDot(e)
 		end
 		
 		-- if the target is not responsible for this touch event return false
-		return false
+		return true
 	end
 	
 	-- listen for touches starting on the touch layer
@@ -474,7 +440,7 @@ function rect:touch(e)
 				updateTracking( rect.prevCentre, rect.dots )
 			end
 		end
-		return false
+		return true
 	end
 	
 	-- if the target is not responsible for this touch event return false

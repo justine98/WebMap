@@ -19,25 +19,32 @@ local scene = composer.newScene()
 
 
 function scene:create( event )
+	print("mapscene:create")
 	sceneGroup = self.view
-	initScale()
-	rect.dots = {}
-	rect:addEventListener("touch")
-	rect.id = "Map"
-	sceneGroup:insert(rect)
+	
 
 
 
 end
 
 function scene:show(event)
+	print("mapscene:show", event.phase)
 	local sceneGroup = self.view
+	if(event.phase == will) then
+		initScale()
+	rect.dots = {}
+	rect:addEventListener("touch")
+	rect.id = "Map"
+	sceneGroup:insert(rect)
+end
 end
 function scene:hide(event)
 	local sceneGroup = self.view
+	print("mapscene:hide", event.phase)
 end
 function scene:destroy(event)
 	local sceneGroup = self.view
+		print("mapscene:destroy", event.phase)
 	-- body
 end
 

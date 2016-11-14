@@ -1,17 +1,58 @@
 local myMap = require("mymap")
 local composer = require("composer")
 
-local photoFiles = {
-	"photos/Arch01.jpg",
-	"photos/Biloxi05.jpg",
-	"photos/Butterfly01.jpg",
-	"photos/DSC6722.jpg",
-	"photos/DSC_7743.jpg",
-	"photos/ElCap.jpg",
-	"photos/FlaKeysSunset.jpg",
-	"photos/MaimiSkyline.jpg",
-	"photos/MtRanier8x10.jpg",
-}
+local photoFiles = {}
+	photoFiles[8] = {
+	"gallery/Admin Building/AdminBuilding.jpg",
+	"gallery/Admin Building/AdminBuilding2.jpg",
+	"gallery/Admin Building/AdminFront.jpg",
+	}
+	photoFiles[16] = {
+	"gallery/Admin Field/AdminField.jpg",
+	"gallery/Admin Field/Admin Field2.jpg"
+	}
+	photoFiles[14] = {
+	"gallery/AS Building/AS Front.jpg",
+	"gallery/AS Building/ASFrontGyod.jpg",
+	"gallery/AS Building/ASLobby.jpg",
+	}
+	photoFiles[15] = {
+	"gallery/AS Field/ASField.jpg",
+	"gallery/AS Field/ASFiledTao.jpg",
+	"gallery/AS Field/ASFieldTao2.jpg",
+	"gallery/AS Field/ASFieldTao4.jpg"
+	}
+	photoFiles[3] = {
+	"gallery/Basketball Court/BasketballCourtResized.jpg"
+	}
+	photoFiles[7] = {
+	"gallery/Canteen/Canteen.jpg",
+	"gallery/Canteen/Canteen2.jpg"
+	}
+	photoFiles[10] = {
+	"gallery/Guest House/GuestHouse.jpg",
+	"gallery/Guest House/GuestHouse2.jpg"
+	}
+	photoFiles[8] = {
+	"gallery/Library/Library.jpg"
+	}
+	photoFiles[4] = {
+	"gallery/Management Building/ManagementResized.jpg"
+	}
+	photoFiles[9] = {
+	"gallery/Oblation Square/ObleSquare.jpg",
+	"gallery/Oblation Square/ObleSquare2.jpg"
+	}
+	photoFiles[1] = {
+	"gallery/Undergrad Building/NsmdCatwalkResized.jpg",
+	"gallery/Undergrad Building/NsmdEntrance.jpg",
+	"gallery/Undergrad Building/NsmdGallery.jpg",
+	"gallery/Undergrad Building/NsmdGawas.jpg",
+	"gallery/Undergrad Building/NsmdSecondFloor.jpg",
+	"gallery/Undergrad Building/NsmdSulod.jpg"
+	}
+	
+
 local buildings = {
 	"Undergrad Building",
 	"Volleyball Court",
@@ -63,7 +104,14 @@ local mapPins  = {}
 		FP = {
 		"photos/NSMD 1ST FLR.png",
 		"photos/NSMD 2ND FLR.png"
-		}
+		},
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[2] ={
 		index = 2,
@@ -73,6 +121,13 @@ local mapPins  = {}
 		text = "The Volleyball Court is located at the western side of the UP Cebu Lahug Campus, near the Undergraduate Building and the university gate. It is open to every UP Cebu student who wished to play and/or practice volleyball.",
 		x = 1726,
 		y = 491,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=tntOCGkgt98",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[3] = {
 		index = 3,
@@ -82,6 +137,13 @@ local mapPins  = {}
 		text = "The Basketball Court is located at the western side of the UP Cebu Lahug Campus, near the Undergraduate Building. and the Management Bldg. It is open to every UP Cebu student who wished to play and/or practice basketball.",
 		x = 1265, 
 		y = 1025,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=fk4BbF7B29w",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[4] = {
 		index = 4,
@@ -94,7 +156,14 @@ local mapPins  = {}
 		FP = {
 		"photos/MANAGEMENT BLDG 1.png",
 		"photos/MANAGEMENT BLDG 2.png"
-		}
+		},
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=8PRqEP_PKk8",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[5] = {
 		index = 5,
@@ -104,6 +173,13 @@ local mapPins  = {}
 		text = "The UP Cebu Clinic is located at the western side of the UP Cebu Lahug Campus, near the Management Building and the Clinic. It provides medical services including dental and physical check-ups.",
 		x = 1177,
 		y = 1438,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=5Nrv5teMc9Y",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[6] = {
 		index = 6, 
@@ -113,6 +189,13 @@ local mapPins  = {}
 		text = "The UP Cebu Dormitory is located at the western side of the UP Cebu Lahug Campus, near the Canteen and the Clinic. It is the home of UP Cebu students who are temporarily staying for the school year.",
 		x = 873,
 		y = 1637,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[7] = {
 		index = 7,
@@ -122,6 +205,13 @@ local mapPins  = {}
 		text = "The UP Cebu Canteen is located at the western side of the UP Cebu Lahug Campus, near the Dorm and the Clinic. It provides food services and school supplies to students.",
 		x = 1169,
 		y = 1705,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=yZEyLJ0uIvw",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	} 
 	mapPins[8] = {
 		index = 8,
@@ -134,7 +224,14 @@ local mapPins  = {}
 		FP = {
 		"photos/ADMIN 1ST FLR.png",
 		"photos/ADMIN 2ND FLOOR.png",
-		}
+		},
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=tntOCGkgt98",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	} 
 	mapPins[9] = {
 		index = 9,
@@ -144,6 +241,13 @@ local mapPins  = {}
 		image = "photos/MtRanier8x10.jpg",
 		x = 1729,
 		y = 1389,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=fk4BbF7B29w",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	} 
 	mapPins[10] = {
 		index = 10,
@@ -153,6 +257,13 @@ local mapPins  = {}
 		image = 'photos/Arch01.jpg',
 		x = 805,
 		y = 2017,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=8PRqEP_PKk8",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[11] = {
 		index = 11,
@@ -165,6 +276,13 @@ local mapPins  = {}
 		image = 'photos/Arch01.jpg',
 		x = 1081,
 		y = 2225,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=5Nrv5teMc9Y",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[12] = {
 		index = 12,
@@ -174,6 +292,13 @@ local mapPins  = {}
 		image = 'photos/Arch01.jpg',
 		x = 1081,
 		y = 2225,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=yZEyLJ0uIvw",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[13] = {
 		index = 13,
@@ -184,6 +309,13 @@ local mapPins  = {}
 		image = "photos/Arch01.jpg",
 		x = 2401,
 		y = 1389,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[14] = {
 		index = 14, 
@@ -199,7 +331,14 @@ local mapPins  = {}
 		"photos/AS 2ND FLR LEFT.png",
 		"photos/AS 2ND FLR RIGHT.png",
 		"photos/AS DCS 3RD FLR.png",
-		}
+		},
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[15] = {
 		index = 15,
@@ -209,6 +348,13 @@ local mapPins  = {}
 		image = 'photos/Arch01.jpg',
 		x = 2994,
 		y = 1365,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 	mapPins[16] = {
 		index = 16,
@@ -218,6 +364,13 @@ local mapPins  = {}
 		image = 'photos/Arch01.jpg',
 		x = 1526,
 		y = 2109,
+		video = {
+    		title = label, 
+    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
+    		content_encoded = text,
+    		description = "something description",
+
+    	}
 	}
 
 
@@ -236,7 +389,7 @@ function pinTap(event)
 		print("pinTap detected")
 	end
 	--myMap.group:removeEventListener("touch", touchListener)
-	composer.showOverlay("mapoverlay", {time=250, effect="crossFade", params={pinDetails = mapPins, index = p.index}})
+	composer.gotoScene("mapoverlay", {time=250, effect="slideLeft", params={pinDetails = mapPins, index = p.index, floorplans = floorPlan, photos = photoFiles[p.index],  }})
 	--print("pintap")
 	return true;
 end

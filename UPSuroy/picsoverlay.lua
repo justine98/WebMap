@@ -20,7 +20,7 @@ local navBar
 local function goBack( event )
 	print("goBack", event.phase)
 	if event.phase == "ended" then
-		composer.hideOverlay( "crossFade", 150 )
+		composer.hideOverlay( "fade", 250 )
 	end
 	return true
 end
@@ -52,7 +52,7 @@ function scene:create( event )
 	viewableScreenW = display.contentWidth
 	viewableScreenH = display.contentHeight -- status bar + top bar + tabBar
 		
-    local background = display.newRect(0,0,display.contentWidth, display.contentHeight + 30)
+    background = display.newRect(0,0,display.contentWidth, display.contentHeight + 30)
     background:setFillColor( 0.95, 0.95, 0.95 )
     background.x = display.contentWidth / 2
     background.y = display.contentHeight / 2
@@ -83,12 +83,12 @@ function scene:create( event )
 
     navBar = widget.newNavigationBar({
         title = "Photo Gallery",
-        backgroundColor = { 138/255, 13/255, 39/255 },
+        backgroundColor = { 231/255, 76/255, 60/255 },
         titleColor = {1, 1, 1},
         --font = myApp.fontBold,
         leftButton = leftButton,
         rightButton = rightButton,
-        y = 0,
+        y = -20,
     })
     sceneGroup:insert(navBar)
 	print("navBary", navBar.y)
@@ -145,49 +145,49 @@ function scene:create( event )
 				print("startPos still null")
 			end
 			prevPos = e.x
-			local dot = newTrackDot(e)
+		-- 	local dot = newTrackDot(e)
 			
-		-- add the new dot to the list
-			background.dots[ #background.dots+1 ] = dot
+		-- -- add the new dot to the list
+		-- 	background.dots[ #background.dots+1 ] = dot
 		
-		-- pre-store the average centre position of all touch points
-			background.prevCentre = calcAvgCentre( background.dots )
+		-- -- pre-store the average centre position of all touch points
+		-- 	background.prevCentre = calcAvgCentre( background.dots )
 		
-		-- pre-store the tracking dot scale and rotation values
-			updateTracking( background.prevCentre, background.dots )
+		-- -- pre-store the tracking dot scale and rotation values
+		-- 	updateTracking( background.prevCentre, background.dots )
         elseif( self.isFocus ) then
         	
 			if ( phase == "moved" ) then
 				
 				--	print( e.phase, e.x, e.y )
 					-- declare working variables
-					local centre, scale, rotate = {}, 1, 0
-					-- calculate the average centre position of all touch points
-					centre = calcAvgCentre( background.dots )
-					-- refresh tracking dot scale and rotation values
-					updateTracking( background.prevCentre, background.dots )
-					-- if there is more than one tracking dot, calculate the rotation and scaling
-					if (#background.dots > 1) then
-						-- calculate the average scaling of the tracking dots
-						scale = calcAverageScaling( background.dots )
+		-- 			local centre, scale, rotate = {}, 1, 0
+		-- 			-- calculate the average centre position of all touch points
+		-- 			centre = calcAvgCentre( background.dots )
+		-- 			-- refresh tracking dot scale and rotation values
+		-- 			updateTracking( background.prevCentre, background.dots )
+		-- 			-- if there is more than one tracking dot, calculate the rotation and scaling
+		-- 			if (#background.dots > 1) then
+		-- 				-- calculate the average scaling of the tracking dots
+		-- 				scale = calcAverageScaling( background.dots )
 						
-						-- apply scaling to rect
-						--rect.xScale, rect.yScale = rect.xScale * scale, rect.yScale * scale
-		--Correct implementation of scale limit on pinch zoom
-						local xScale = images[imgNum].xScale * scale
-						local yScale = images[imgNum].yScale * scale
-						local ZOOMMAX = 1
-						local ZOOMMIN = 0.2
+		-- 				-- apply scaling to rect
+		-- 				--rect.xScale, rect.yScale = rect.xScale * scale, rect.yScale * scale
+		-- --Correct implementation of scale limit on pinch zoom
+		-- 				local xScale = images[imgNum].xScale * scale
+		-- 				local yScale = images[imgNum].yScale * scale
+		-- 				local ZOOMMAX = 1
+		-- 				local ZOOMMIN = 0.2
 
-						--set upper bound
-						xScale = math.min(ZOOMMAX, xScale)
-						yScale = math.min(ZOOMMAX, yScale)
+		-- 				--set upper bound
+		-- 				xScale = math.min(ZOOMMAX, xScale)
+		-- 				yScale = math.min(ZOOMMAX, yScale)
 
-						--set lower bound
-						images[imgNum].xScale = math.max(ZOOMMIN, xScale)
-						images[imgNum].yScale = math.max(ZOOMMIN, yScale)
-						-- 
-					end
+		-- 				--set lower bound
+		-- 				images[imgNum].xScale = math.max(ZOOMMIN, xScale)
+		-- 				images[imgNum].yScale = math.max(ZOOMMIN, yScale)
+		-- 				-- 
+		-- 			end
 		----------------------------------------------------
 					-- update the position of rectif(images[imgNum -1]) then
 						-- 	images[imgNum-1].xScale = math.max(ZOOMMIN, xScale)
@@ -198,26 +198,26 @@ function scene:create( event )
 						-- 	images[imgNum+1].yScale = math.max(ZOOMMIN, yScale)
 						-- end
 					-- store the centre of all touch points
-						background.prevCentre = centre
-			else -- "ended" and "cancelled" phases
-					--print( e.phase, e.x, e.y )
-					print("not moved", e.numTaps)
-					-- remove the tracking dot from the list
-					if (isDevice or e.numTaps == 2) then
-						-- get index of dot to be removed
-						local index = table.indexOf( background.dots, e.target )
-						-- remove dot from list
-						table.remove( background.dots, index )
-						print("remove dot")
-						-- remove tracking dot from the screen
-						e.target:removeSelf()
-						-- store the new centre of all touch points
-						background.prevCentre = calcAvgCentre(background.dots )
+			-- 			background.prevCentre = centre
+			-- else -- "ended" and "cancelled" phases
+			-- 		--print( e.phase, e.x, e.y )
+			-- 		print("not moved", e.numTaps)
+			-- 		-- remove the tracking dot from the list
+			-- 		if (isDevice or e.numTaps == 2) then
+			-- 			-- get index of dot to be removed
+			-- 			local index = table.indexOf( background.dots, e.target )
+			-- 			-- remove dot from list
+			-- 			table.remove( background.dots, index )
+			-- 			print("remove dot")
+			-- 			-- remove tracking dot from the screen
+			-- 			e.target:removeSelf()
+			-- 			-- store the new centre of all touch points
+			-- 			background.prevCentre = calcAvgCentre(background.dots )
 						
-						-- refresh tracking dot scale and rotation values
-						updateTracking( background.prevCentre, background.dots )
-					end
-				end
+			-- 			-- refresh tracking dot scale and rotation values
+			-- 			updateTracking( background.prevCentre, background.dots )
+			-- 		end
+				
 	
 						
 				if tween then transition.cancel(tween) end
@@ -260,7 +260,7 @@ function scene:create( event )
                 return true
 														
 			end
-		
+		end 
 					
 		return false
 		
@@ -470,20 +470,24 @@ end
 
 function scene:show( event )
     local sceneGroup = self.view
+    print("picsOverlay:show", event.phase)
     
 end
 
 function scene:hide( event )
     local sceneGroup = self.view
-
+    print("picsOverlay:hide", event.phase)
     --
     -- Clean up any native objects and Runtime listeners, timers, etc.
     --
+   -- background:removeEventListener("touch", bgListener)
+
     
 end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+    print("picsOverlay:destroy", event.phase)
     
 end
 

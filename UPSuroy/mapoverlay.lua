@@ -23,7 +23,9 @@ local descPressed = 0
 local function goBack( event )
 	print(event.phase)
 	if event.phase == "ended" then
-		composer.hideOverlay( "fade", 250 )
+		--composer.hideOverlay( "fade", 250 )
+		
+		composer.gotoScene("menu", "fade", 200)
 	end
 	return true
 end
@@ -52,6 +54,9 @@ function scene:create( event )
 	end
 	pins = event.params.pinDetails
 	 index = event.params.index
+	 videostory = pins[index].video
+	 photos = event.params.photos
+
 	assert(pins, "Error: pins list not set")
 
 	viewableScreenW = display.contentWidth
@@ -68,30 +73,24 @@ function scene:create( event )
     --	})
 
     local vtPress = function(event)
-    	local story = {
-    		title = "UP video thingy",
-    		link = "https://www.youtube.com/watch?v=N6jWu82_NoE",
-    		content_encoded = "content encoded sumthing",
-    		description = "something description",
-
-    	}
+    	local story =  videostory
     	composer.showOverlay("videoScene", {time = 100, effect = "slideRight", params= {story = story}})
 
 	end
-    local descPress = function( event )
-    if descPressed == 0 then
-		 textbox = native.newTextBox(display.contentWidth/2, 70, display.contentWidth,100)
+    --local descPress = function( event )
+    --if descPressed == 0 then
+		 textbox = native.newTextBox(display.contentWidth/2, 360, display.contentWidth,100)
 		textbox.size = 16
 		textbox.text = pins[index].text
 		textbox.isEditable = false
 		sceneGroup:insert(textbox)
-		descPressed = 1
-	else
-		textbox:removeSelf()
-		descPressed = 0 
-	end
-	return true;
-	end 
+		--descPressed = 1
+	--else
+		--textbox:removeSelf()
+		--descPressed = 0 
+	--end
+	--return true;
+	--end 
 	local picsPress = function(event)
 		local options =
 {
@@ -99,11 +98,12 @@ function scene:create( event )
 	    time = 100,
 	    params = {
 	        pin = pins[index],
+	        photos = photos,
 	    }
 	}
 		composer.gotoScene("picsScene", options)
 	end
-	local floorplanPress = function( event )
+	local roomsPress = function( event )
 			--print("floorplansPress,",tostring(event.target))
 		if(pins[index].hasFP == 1) then 
 			composer.showOverlay("picsoverlay", {time=100, effect="crossFade", params={FP= pins[index].FP}})
@@ -134,14 +134,14 @@ function scene:create( event )
 	--local button =widget.newButton()
     navBar = widget.newNavigationBar({
         title = "VR MAP",
-        backgroundColor = { 138/255, 13/255, 39/255 },
+        backgroundColor = { 231/255, 76/255, 60/255 },
         titleColor = {1, 1, 1},
         font = myMap.fontBold,
         leftButton = leftButton,
         rightButton = rightButton,
         y = 0,
     })
-    --navBar.y = -40
+    navBar.y = -20
     sceneGroup:insert(navBar)
 	setSlideNumber()
 	images = {}
@@ -162,34 +162,34 @@ function scene:create( event )
 		sceneGroup:insert(p)
 	    
 	
-		floorplanButton = widget.newButton
+		roomsButton = widget.newButton
 		{
-			defaultFile = "Button_floorplan.png",
-			overFile = "Button_floorplanPressed.png",
-			onPress = floorplanPress,
+			defaultFile = "Button_rooms.PNG",
+			overFile = "Button_roomsPressed.PNG",
+			onPress = roomsPress,
 			--onRelease = button1Release,
 		}
-		floorplanButton.x = display.contentWidth/2; floorplanButton.y = 400
-		sceneGroup:insert(floorplanButton)
+		roomsButton.x = display.contentWidth/2; roomsButton.y = 450
+		sceneGroup:insert(roomsButton)
 		
 		videoButton = widget.newButton
 		{
-			defaultFile = "Button_videos.png",
-			overFile = "Button_videosPressed.png",
+			defaultFile = "Button_videos.PNG",
+			overFile = "Button_videosPressed.PNG",
 			onPress = vtPress,
 			--onRelease = button1Release,
 		}
-		videoButton.x = display.contentWidth/2; videoButton.y = 440
+		videoButton.x = roomsButton.x -100; videoButton.y = 450
 		sceneGroup:insert(videoButton)
 		
 		picsButton = widget.newButton
 		{
-			defaultFile = "Button_desc.png",
-			overFile = "Button_descPressed.png",
+			defaultFile = "Button_photos.PNG",
+			overFile = "Button_photosPressed.PNG",
 			onPress = picsPress,
 			--onRelease = button1Release,
 		}
-		picsButton.x = display.contentWidth/2; picsButton.y = 480
+		picsButton.x = roomsButton.x + 100; picsButton.y = 450
 		sceneGroup:insert(picsButton)
 
 	
@@ -218,12 +218,12 @@ end
 
 function scene:show( event )
     local sceneGroup = self.view
-    
+    print("mapoverlay:show", event.phase)
 end
 
 function scene:hide( event )
     local sceneGroup = self.view
-
+    print("mapoverlay:hide", event.phase)
     --
     -- Clean up any native objects and Runtime listeners, timers, etc.
     --
@@ -232,6 +232,7 @@ end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+    print("mapoverlay:destroy", event.phase)
     
 end
 
