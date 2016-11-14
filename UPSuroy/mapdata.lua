@@ -389,7 +389,7 @@ function pinTap(event)
 		print("pinTap detected")
 	end
 	--myMap.group:removeEventListener("touch", touchListener)
-	composer.showOverlay("mapoverlay", {time=250, effect="slideLeft", params={pinDetails = mapPins, index = p.index, floorplans = floorPlan, photos = photoFiles[p.index],  }})
+	composer.gotoScene("mapoverlay", {time=250, effect="slideLeft", params={pinDetails = mapPins, index = p.index, floorplans = floorPlan, photos = photoFiles[p.index],  }})
 	--print("pintap")
 	return true;
 end

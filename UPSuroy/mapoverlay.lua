@@ -23,7 +23,9 @@ local descPressed = 0
 local function goBack( event )
 	print(event.phase)
 	if event.phase == "ended" then
-		composer.hideOverlay( "fade", 250 )
+		--composer.hideOverlay( "fade", 250 )
+		
+		composer.gotoScene("menu", "fade", 200)
 	end
 	return true
 end
@@ -216,12 +218,12 @@ end
 
 function scene:show( event )
     local sceneGroup = self.view
-    
+    print("mapoverlay:show", event.phase)
 end
 
 function scene:hide( event )
     local sceneGroup = self.view
-
+    print("mapoverlay:hide", event.phase)
     --
     -- Clean up any native objects and Runtime listeners, timers, etc.
     --
@@ -230,6 +232,7 @@ end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+    print("mapoverlay:destroy", event.phase)
     
 end
 
