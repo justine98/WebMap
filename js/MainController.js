@@ -8,6 +8,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 						{Ploc:'images/floorplans/AS/AS 2ND FLR RIGHT.png', flr: 'R2'}, 
 						{Ploc:'images/floorplans/AS/AS DCS 3RD FLR.png', flr: 'R3'}
 					]
+	$scope.firstD = '';
 	$scope.vidz = '';
 	$scope.vidlink ='';
 	$scope.pps =  [		{Dloc:'images/gallery/Undergrad Building/NsmdCatwalkResized.jpg'},
@@ -86,6 +87,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 		$scope.description = x.Dscr;
 		$scope.photo = x.ip;
 		$scope.picture = x.pip;
+		$scope.firstD = x.pf[0].Dloc;
 		$scope.max = '400px';
 		$scope.fsize = '15px';
 		$scope.padleft = '0';
@@ -99,7 +101,11 @@ app.controller('MainController', ($scope, $http, $sce) => {
 	$scope.setPhoto = function(x){
 		$scope.photo = x.Ploc;
 	}
-	
+
+	$scope.setPhoto1 = function(x){
+		$scope.picture = x.Dloc;
+	}
+
 	$scope.onTouchstart = function(x) {
    		$scope.title = x.Bldng;
 		$scope.description = x.Dscr;
