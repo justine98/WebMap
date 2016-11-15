@@ -18,7 +18,7 @@ local navBar
 --widget.theme = myMap.theme
 
 local function goBack( event )
-	print("goBack", event.phase)
+	print("picoverlay goBack", event.phase)
 	if event.phase == "ended" then
 		composer.hideOverlay( "fade", 250 )
 	end
@@ -58,13 +58,10 @@ function scene:create( event )
     background.y = display.contentHeight / 2
     background.id = 'Background'
 
-
     sceneGroup:insert(background)
 
    -- sharingPanel = widget.newSharingPanel({
     --	})
-
-
 	local leftButton = {
 		onEvent = goBack,
 		width = 59,
@@ -119,7 +116,6 @@ function scene:create( event )
 
 		images[i] = p
 	end
-	
 	
 	local defaultString = "1 of " .. #images
 	
@@ -502,12 +498,10 @@ end
 -- keep a list of the tracking dots
 
 
-
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
-
 ---------------------------------------------------------------------------------
 
 return scene

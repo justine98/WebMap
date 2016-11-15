@@ -403,7 +403,9 @@ print(myMap.group.x)
 print(myMap.group.y)
 local pinGroup = display.newGroup()
 for i=1, #mapPins do
+	print("loading pins")
 local pin = display.newImage('pin.png')
+
 	pin:scale(0.2, 0.2)
 	pin.x = myMap.group.x - mapSize.w/2 + mapPins[i].x
 	pin.y = myMap.group.y - mapSize.h/2 + mapPins[i].y

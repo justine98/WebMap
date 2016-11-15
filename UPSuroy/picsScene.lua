@@ -48,9 +48,9 @@ local photoFiles
 local photosThumbnails = {}
 local photosThumbGroups = {}
 function goBack( event )
-    print("goBack", event.phase)
+    print("picScene goBack", event.phase)
     if event.phase == "ended" then
-        composer.hideOverlay( "fade", 250 )
+       composer.hideOverlay( "fade", 250 )
     end
     return true
 end
@@ -139,11 +139,13 @@ end
 
 function scene:show( event )
     local sceneGroup = self.view
+    print("picScene:show", event.phase)
     
 end
 
 function scene:hide( event )
     local sceneGroup = self.view
+    print("picScene:hide", event.phase)
 
     --
     -- Clean up any native objects and Runtime listeners, timers, etc.
@@ -153,6 +155,7 @@ end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+    print("picScene:destroy", event.phase)
     
 end
 
