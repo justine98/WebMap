@@ -254,8 +254,21 @@ function scene:show( event )
 			-- for i = 1, #UPC do
 			-- 	myMap:requestLocation(UPC[i], function(event) addStarbucks(event, i); end)
 			-- end
-
-			myMap:requestLocation( "University of the Philippines, Cebu Campus, Cebu City, Central Visayas", mapLocationHandler )
+			  local options = { 
+    	title="UP Cebu", 
+    	subtitle="",  
+	    imageFile = 
+	    {
+    	    filename = "coronamarker.png",
+        	baseDir = system.ResourcesDirectory
+    	},
+       	listener=markerListener 
+       	
+    }
+			myMap:setCenter(10.3223812, 123.898717, false )
+    		myMap:setRegion( 10.3223812, 123.898717, 0.25, 0.25, false)
+    		myMap:addMarker( 10.3223812, 123.898717, options )
+			--myMap:requestLocation( "University of the Philippines, Cebu Campus, Cebu City, Central Visayas", mapLocationHandler )
 			views[1]:addEventListener("touch", setMode)
 			views[2]:addEventListener("touch", setMode)
 			views[3]:addEventListener("touch", setMode)
