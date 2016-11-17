@@ -14,7 +14,7 @@ local function closeSplash()
 	print("welcome")
     display.remove(welcome)
    welcome = nil
-    composer.gotoScene("menu")
+    composer.gotoScene("googlemaps")
 end
 
 timer.performWithDelay(1500, closeSplash)

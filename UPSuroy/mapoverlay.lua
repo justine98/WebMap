@@ -47,7 +47,7 @@ local function setSlideNumber()
 --function new( imageSet, slideBackground, top, bottom )	
 function scene:create( event )
 	local sceneGroup = self.view
-	print("create")
+	print("create mapoverlay")
 	local pad = 0
 	local top = top or 0
 	local bottom = bottom or 0
@@ -76,14 +76,15 @@ function scene:create( event )
 		textbox.size = 16
 		textbox.text = pins[index].text
 		textbox.isEditable = false
+		
 		sceneGroup:insert(textbox)
    -- sharingPanel = widget.newSharingPanel({
     --	})
-
+    	textbox.isVisible = true
     local vtPress = function(event)
 
     	local story =  videostory
-    	--textbox:removeSelf()
+    	textbox.isVisible = false
     	composer.showOverlay("videoScene", {time = 100, effect = "slideRight", isModal= true, params= {story = story}})
 
 	end
@@ -109,18 +110,14 @@ function scene:create( event )
 
 	    }
 	}
-	--textbox:removeSelf()
+		textbox.isVisible = false
 		composer.showOverlay("picsScene", options)
 	end
 	local roomsPress = function( event )
-			--print("floorplansPress,",tostring(event.target))
+
 		if(pins[index].hasFP == 1) then 
-			--textbox:removeSelf()
+			textbox.isVisible = false
 			composer.showOverlay("picsoverlay", {time=100, effect="crossFade", isModal = true, params={FP= pins[index].FP}})
-			local fpimage = display.newImageRect("floorplans/NA.png",display.contentWidth*1.5, display.contentHeight*0.75) 
-		fpimage.x = display.contentWidth/2;fpimage.y = display.contentHeight/2 -55
-		--fpimage:addEventListener( "touch", onTouch )
-		sceneGroup:insert(fpimage)
 
 		end
 		return true;

@@ -385,8 +385,6 @@ function rect:touch(e)
 				-- apply scaling to rect
 				--rect.xScale, rect.yScale = rect.xScale * scale, rect.yScale * scale
 
-
-
 --Correct implementation of scale limit on pinch zoom
 			local xScale = rect.xScale * scale
 			local yScale = rect.yScale * scale
