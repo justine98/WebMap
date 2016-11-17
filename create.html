@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Create Tour</title>
+    <link rel="stylesheet" href="css/creator/editor.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  	<script src="node_modules/ngtouch/build/ngTouch.min.js"></script>
+  	<script src="js/app.js"></script>
+    <script src="js/MainController.js"></script> 
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<script src="js/jquery.ui.touch-punch.js"></script>
+	</head>
+
+	<body ng-app="myApp" ng-controller="MainController" >
+		<section id="EditorBackground">
+			<div class="editBody">
+				<div class="map-container" id="map-container">
+					<img class="map">
+        	<div ng-repeat="pin in pins" class="pin" style="top:{{ pin.t }};left:{{ pin.l }};" id="{{$index}}" title="{{pin.Bldng}}">
+						<img id="pin_{{$index + 1}}" class="pinImg" src="images/pin.png" width="50" height="50">
+						<ul class="bldng">{{pin.Bldng}}</ul>
+		      </div>	
+				</div>
+			</div>
+
+			<div class="toolbar" >
+				<div class="toolPanel" >
+					<div class="pinHolder">
+						<div class="pinTool">
+							<img id="pinimg" class="pinImg" src="images/pin.png" width="50" height="50">
+		        </div>	
+					</div>
+
+					<div class="toolContent">
+						<input class="inputBox" type="text" name="mapWords" value="images/map.png">
+					</div>
+
+					<div class="toolContent">
+						<button class="submitUrl" onclick="setSrc()">Submit</button>
+					</div>
+
+					<div class="toolContent">
+						<button class="disabler" onclick="disableThem()">Snap</button>
+					</div>
+
+					<div class="toolContent">
+						<button class="enabler" onclick="enableThem()">Edit</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="trashcan">
+				<img class="trashImg" src="images/trash-can.svg">
+			</div>
+
+		</section>
+
+		<script>
+			function disableThem(){
+				$('.map').resizable({ disabled: true });
+				$('.map-container').draggable({ disabled: true });
+				$('.pin').draggable({ disabled: true });
+				var c = 0;
+				$('.pin').each(function(i, obj) {
+    			c++;
+				});
+				alert(c + " Pins Snapped Into the Map");
+			}
+
+			function enableThem(){
+				$('.map').resizable({ disabled: false });
+				$('.map-container').draggable({ disabled: false });
+				$('.pin').draggable({ disabled: false });
+
+				/*for(var c = 0; c < $('.pin').length; c++){
+					if($($('.pin')[c]).hasClass('ui-draggable')){
+						$($('.pin')[c]).draggable('destroy');
+					}
+
+		      $($('.pin')[c]).draggable({revert: 'invalid'}).click(function(){
+        		alert("yup");
+        	});
+				}*/
+			}
+
+			/*function displayID(IDNUM){
+				alert(IDNUM);
+			}*/
+
+
+			function setSrc(){
+				var innerWidth;
+				var outerWidth;
+				var q
+				for(var c = 0; c < $('.pin').length; c++){
+					innerWidth = $($('.bldng')[c]).width();
+					outerWidth = $($('.bldng')[c]).parent().width();
+		
+
+					if(innerWidth > outerWidth) {
+					    var marginLeft = -1 * (innerWidth - outerWidth)/2;
+					    $($('.bldng')[c]).css('left', marginLeft);
+					}
+
+					if(!($($('.pin')[c]).hasClass('ui-draggable'))){
+						$($('.pin')[c]).draggable({revert: 'invalid'}).click(function(event){
+        			alert(event.target.id);
+        		});
+					}
+				}
+
+				var mapC = document.getElementById('map-container');
+    		var x;
+    		var y;
+				var img = new Image();
+		    img.onload = function(){
+		        x = this.width;
+		        y = this.height;
+
+		        if(x > window.innerWidth || y > window.innerHeight){
+		        	if(x > y){
+			        	z = $('.editBody').innerWidth();
+			        	y = y/(x/z);
+			        	x = z;
+			        	if(y > $('.editBody').innerHeight()){
+			        		z = $('.editBody').innerHeight();
+			        		x = x/(y/z);
+			        		y = z;
+			        	} else {
+			        		x = z;
+			        	}
+
+			        } else {
+			        	z = $('.editBody').innerHeight();
+			        	x = x/(y/z);
+			        	if(x > $('.editBody').innerWidth()){
+			        		z = $('.editBody').innerWidth();
+			        		y = y/(x/z);
+			        		x = z;
+			        	} else {
+			        		y = z;
+			        	}
+			        }
+
+			        x = x - ($('.editBody').innerHeight() * 0.05);
+			        y = y - ($('.editBody').innerHeight() * 0.05);
+		        }
+
+			       
+		        mapC.style.width = x;
+		        mapC.style.height = y;
+
+		        
+
+		        /*alert($('.editBody').innerWidth());
+		        alert(window.innerWidth);*/
+		        $('.map').attr('width', x);
+		        $('.map').attr('width', y);
+		        $('.map').attr('src', $('.inputBox').val());
+		        $('.map').resizable('destroy');
+		        $('.map').resizable();
+		        $('.map').resizable("resizeTo", {
+			        height: y, 
+			        width: x 
+			    	});
+		    };
+		    img.src = $('.inputBox').val();
+			}
+
+
+
+			$('.map').resizable();
+
+			$(".map-container").draggable({
+    		appendTo: '.editBody',
+    	})
+
+    	$('.pinImg').onload = function(){
+    		this.attr("id", "pin_" + ($('.pin').length + 1));
+    	}
+
+    	$(".map-container").droppable({
+				accept:'.pinTool, .pin',
+        drop: function (event, ui) {
+          var div = ui.helper;
+          if(div.hasClass('pinTool')){
+            div = div.clone();
+            div.removeClass('pinTool');
+            div.addClass('pin');
+            div.find('.pinImg').attr("id", "pin_" + ($('.pin').length + 1));
+            div.draggable({revert: 'invalid'}).click(function(event){
+          		alert(event.target.id);
+          	});
+          } 
+          
+          div.appendTo('.map-container');  
+        }
+    	});
+
+			$.widget("ui.resizable", $.ui.resizable, {
+		    resizeTo: function(newSize) {
+	        var start = new $.Event("mousedown", { pageX: 0, pageY: 0 });
+	        this._mouseStart(start);
+	        this.axis = 'se';
+	        var end = new $.Event("mouseup", {
+	            pageX: newSize.width - this.originalSize.width,
+	            pageY: newSize.height - this.originalSize.height
+	        });
+	        this._mouseDrag(end);
+	        this._mouseStop(end);
+		    }
+			});
+
+			$( function() {
+		    $(".pinTool").draggable({
+		    	/*grid: [ 1, 1 ],
+					appendTo: '.editBody',
+				  containment: "window",
+					cursor: 'move',
+					revertDuration: 100,*/
+					cursor: "move",
+					revert: 'invalid',
+					appendTo: '.map-container',
+					helper: 'clone'
+	    	});
+
+
+	    	$(".trashcan").droppable({
+	    		accept: ".pin", 
+					drop: function (event, ui) {
+						$(ui.draggable).remove();
+				  }
+	    	});
+	    	
+				/**
+					File Uploader from Url
+	    	**/
+	    	
+		  } );
+		</script>
+	
+	</body>
+</html>
