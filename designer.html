@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+  <title>SuroyUP</title>
+  <link rel="stylesheet" type="text/css" href="css/tooltipster.bundle.min.css" />
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="css/map/map.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script src="js/tooltipster.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="js/jquery.ui.touch-punch.js"></script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCB1PXJVGmlhG4PsJvOH5kTH7RFHcmnZ-E&libraries=places,drawing,geometry&callback=initialize">
+  </script>
+  <!-- <script type="text/javascript">
+    $(document).ready(function() {
+      
+    });
+  </script> -->
+</head>
+<body>
+  <div class="mapCanvas" id="mapCanvas"></div>
+  <div class="toolShelf">
+    <div class="toolBox" title="Click me to set Markers!" onclick="setM()">
+      <img class="pin" src="images/pin1.png" height="37" width="25" onclick="setM()">
+    </div>
+
+    <div class="toolBox" title="Click me to assign Parking Areas!" onclick="traceM()">
+      <img class="traceM" src="images/traceM.png" height="35" width="35" onclick="traceM()">
+    </div>
+
+    <div class="toolBox" title="Click me to set Restricted Places!">
+      <img class="restricted" src="images/restricted.png" height="30" width="30">
+    </div>
+    <div class="toolBox" title="Click me to set Restriction boundaries" onclick="traceR()">
+      <img class="traceR" src="images/traceR.png" height="35" width="35" onclick="traceR()">
+    </div>
+    <div class="toolBox" title="Click me to assign Parking Areas!">
+      <img class="parking" src="images/parking.png" height="25" width="25">
+    </div>
+    <div class="toolBox" title="Click me to assign Parking Areas!" onclick="traceP()">
+      <img class="traceP" src="images/traceP.png" height="35" width="35" onclick="traceP()">
+    </div>
+    <div class="toolBox" title="Turn to Night Mode!">
+      <img class="time" src="images/moon.png" height="40" width="40" onclick="setTime()">
+    </div>
+  </div>
+
+<!--   <div class="mapShelf">
+    <ul class="mapLink" onclick="loadMap('main')">
+      <a >University of the Philippines- Main Campus</a>
+    </ul> 
+    <ul class="mapLink" onclick="loadMap('srpc')">
+      <a> University of the Philippines- SRP Campus</a>
+    </ul>
+    <ul class="mapLink" onclick="loadMap('prdl')">
+      <a>Parade of Lights</a>
+    </ul>
+    <ul class="mapLink" onclick="loadMap('cook')">
+      <a>Cookout</a>
+    </ul>
+  </div> -->
+  
+  <div id="drop-container"><div id="drop-silhouette"></div></div>
+
+<!-- JQuery Actions -->
+  <script>
+    $('.pin').draggable({
+      helper: 'clone',
+      stop: function(e) {
+        var point = new google.maps.Point(e.pageX,e.pageY);
+        var ll = overlay.getProjection().fromContainerPixelToLatLng(point);
+        placeMarker(ll);
+      }
+    });
+
+    $('.restricted').draggable({
+      helper: 'clone',
+      stop: function(e) {
+        var point = new google.maps.Point(e.pageX,e.pageY);
+        var ll = overlay.getProjection().fromContainerPixelToLatLng(point);
+        restrictMarker(ll);
+      }
+    });
+
+    $('.parking').draggable({
+      helper: 'clone',
+      stop: function(e) {
+        var point = new google.maps.Point(e.pageX,e.pageY);
+        var ll = overlay.getProjection().fromContainerPixelToLatLng(point);
+        parkingMarker(ll);
+      }
+    });
+  </script>
+<!-- Map Initialization -->
+  <script>
+    function r2g(){
+      window.location.assign("/map");
+    }
+    var xy;
+    var ok;
+    var map;
+    var time;
+    var traceR;
+    var overlay;
+    var points = [];
+    var markers = [];
+    var markerInfo = [];
+    var parkings = [];
+    var parkingInfo = []
+    var restricts = [];
+    var restrictInfo = [];
+
+    var drawingTool;
+    var markedArea = [];
+    var markedMark = [];
+    var markedInfo = [];
+    var restrictedArea = [];
+    var restrictedMark = [];
+    var restrictedInfo = [];
+    var parkinglotArea = [];
+    var parkinglotMark = [];
+    var parkinglotInfo = [];
+
+    function loadMap(json){
+      loadGeoJsonString('json/' +json + '.json');
+    }
+
+    function initialize() {
+      initMap();
+      /*initEvents();*/
+    }
+
+    function initMap() {
+      xy = new google.maps.LatLng(10.3223812, 123.898717);
+      var options = {
+        zoom: 18,
+        center: xy,
+        styles: [
+          {
+            "featureType": "poi.business",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+        ]
+        };
+      map = new google.maps.Map(document.getElementById("mapCanvas"),options);
+      overlay = new google.maps.OverlayView();
+      overlay.draw = function() {};
+      overlay.setMap(map);    
+      time = true;
+
+      drawingTool = new google.maps.drawing.DrawingManager();
+    };
+
+    function setTime(){
+      if(time == true){
+        $('.time').attr('src', 'images/sun.png');
+        time = false;
+        map.setOptions({
+          styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+              "featureType": "poi.business",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              featureType: 'administrative.locality',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+            "featureType": "poi",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#859fb6"
+              },
+              {
+                "weight": 0.5
+              }
+            ]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'geometry',
+              stylers: [{color: '#263c3f'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#6b9a76'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#212a37'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#9ca5b3'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry',
+              stylers: [{color: '#746855'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#1f2835'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#f3d19c'}]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry',
+              stylers: [{color: '#2f3948'}]
+            },
+            {
+              featureType: 'transit.station',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry',
+              stylers: [{color: '#17263c'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#515c6d'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.stroke',
+              stylers: [{color: '#17263c'}]
+            }
+          ]
+        });
+      } else {
+        $('.time').attr('src', 'images/moon.png');
+        time = true;
+        map.setOptions({
+          styles: [
+            {
+              "featureType": "poi.business",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+          ]
+        })
+      }
+    }
+
+    function loadGeoJsonString(geoString) {
+      initMap();
+      var geojson = JSON.parse(geoString);
+      map.data.addGeoJson(geojson);
+      zoom(map);
+    }
+
+    function setM(){
+      ok = true;
+      //Allowing to draw shapes in the Client Side
+      if(drawingTool.getMap()) {
+          drawingTool.setMap(null); // Used to disable the Polygon tool
+          drawingTool = new google.maps.drawing.DrawingManager();
+      }
+      drawingTool.setOptions({
+          drawingMode : google.maps.drawing.OverlayType.MARKER,
+          drawingControl : true,
+          drawingControlOptions : {
+              position : google.maps.ControlPosition.TOP_CENTER,
+              drawingModes : [google.maps.drawing.OverlayType.MARKER]
+          }
+      });
+
+      drawingTool.setMap(map); 
+
+      google.maps.event.addListener(drawingTool,'markercomplete',function(marker) {
+        drawingTool.setMap(null);
+        marker.setOptions({
+          draggable: true,
+          map: map,
+          streetViewControl: true,
+          icon:'images/pin1.png'
+        })
+        markers.push(marker);
+        var index = markers.indexOf(marker);
+
+        var content = 
+          '<input class="inputTitle" type="text" name="bldng" id="title' + index + '" value="Enter Title here" onclick="this.select()" onkeydown="setName(' + index + ', event)">' + 
+          '<textarea class="inputDetails" id="details' + index + '" value="Enter details here" onclick="this.select()" onkeydown="setDetails(' + index + ', event)">Enter Description here.</textarea>' +
+          '<div class="buttonGroup">' + 
+          '<img class="pinMedia" id="directory"  src="images/directory.png" width="25" height="25" onclick="setPlans(' + index + ')">' + 
+          '<img class="pinMedia" id="photo"  src="images/photo.png" width="25" height="25" onclick="setPhotos(' + index + ')">' +
+          '<img class="pinMedia" id="video"  src="images/video.png" width="25" height="25" onclick="setVideos(' + index + ')">' +
+          '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deletePin1(' + index + ')"></div>  ';
+        var infoWindow = new google.maps.InfoWindow({content: content});
+        markerInfo.push(infoWindow);
+        marker.addListener('click', function() {
+          if (!(isInfoWindowOpen(infoWindow))){
+            infoWindow.open(map, marker);
+            infoCloser(markerInfo, index);
+          } else {
+            markerInfo[index].close();
+          }
+          $('#details' + index).val(marker.getPosition().lng() + "," + marker.getPosition().lat());
+        });
+        infoWindow.open(map, marker);
+        infoCloser(markerInfo, index);
+      });
+    }
+
+    function traceM(){
+      ok = true;
+      //Allowing to draw shapes in the Client Side
+      if(drawingTool.getMap()) {
+          drawingTool.setMap(null); // Used to disable the Polygon tool
+          drawingTool = new google.maps.drawing.DrawingManager();
+      }
+      drawingTool.setOptions({
+          drawingMode : google.maps.drawing.OverlayType.POLYGON,
+          drawingControl : true,
+          drawingControlOptions : {
+              position : google.maps.ControlPosition.TOP_CENTER,
+              drawingModes : [google.maps.drawing.OverlayType.POLYGON]
+          }
+      });
+
+      drawingTool.setMap(map); 
+
+      google.maps.event.addListener(drawingTool,'polygoncomplete',function(polygon) {
+        polygon.setEditable(true);
+        polygon.setOptions({
+          strokeColor: 'red',
+          fillColor: 'red',
+        });
+        drawingTool.setMap(null);
+
+        var bounds = new google.maps.LatLngBounds()
+        polygon.getPath().forEach(function(element,index){bounds.extend(element)});
+        if (ok) {
+          markedArea.push(polygon);
+          var index = markedArea.indexOf(polygon);
+          var marker = new google.maps.Marker({
+            position: bounds.getCenter(), 
+            map: map,
+            streetViewControl: true,
+            icon:'images/pin2.png'
+          });
+          markedMark.push(marker);
+
+          var content = 
+            '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deleteArea1(' + index + ')"></div>  ';
+          var infoWindow = new google.maps.InfoWindow({content: content});
+          markedInfo.push(infoWindow);
+
+          polygon.addListener('click', function() {
+            if (!(isInfoWindowOpen(infoWindow))){
+              infoWindow.open(map, marker);
+              infoCloser(markedInfo, index);
+            } else {
+              markedInfo[index].close();
+            }
+          });
+
+          marker.addListener('click', function() {
+            if (!(isInfoWindowOpen(infoWindow))){
+              infoWindow.open(map, marker);
+              infoCloser(markedInfo, index);
+            } else {
+              markedInfo[index].close();
+            }
+          });
+          infoWindow.open(map, marker);
+          infoCloser(markedInfo, index);
+          ok = false;
+        } else {
+
+        }
+      });
+    }
+  
+    function traceR(){
+      ok = true;
+      //Allowing to draw shapes in the Client Side
+      if(drawingTool.getMap()) {
+          drawingTool.setMap(null); // Used to disable the Polygon tool
+          drawingTool = new google.maps.drawing.DrawingManager();
+      }
+      drawingTool.setOptions({
+          drawingMode : google.maps.drawing.OverlayType.POLYGON,
+          drawingControl : true,
+          drawingControlOptions : {
+              position : google.maps.ControlPosition.TOP_CENTER,
+              drawingModes : [google.maps.drawing.OverlayType.POLYGON]
+          }
+      });
+
+      drawingTool.setMap(map); 
+
+      google.maps.event.addListener(drawingTool,'polygoncomplete',function(polygon) {
+        polygon.setEditable(true);
+        polygon.setOptions({
+          strokeColor: 'yellow',
+          fillColor: 'yellow',
+        })
+        drawingTool.setMap(null);
+
+        var bounds = new google.maps.LatLngBounds()
+        polygon.getPath().forEach(function(element,index){bounds.extend(element)});
+        if (ok) {
+          restrictedArea.push(polygon);
+          var index = restrictedArea.indexOf(polygon);
+          var marker = new google.maps.Marker({
+            position: bounds.getCenter(), 
+            map: map,
+            streetViewControl: true,
+            icon:'images/restricted2.png'
+          });
+          restrictedMark.push(marker);
+
+          var content = 
+            '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deleteArea2(' + index + ')"></div>  ';
+          var infoWindow = new google.maps.InfoWindow({content: content});
+          restrictedInfo.push(infoWindow);
+
+          polygon.addListener('click', function() {
+            if (!(isInfoWindowOpen(infoWindow))){
+              infoWindow.open(map, marker);
+              infoCloser(restrictedInfo, index);
+            } else {
+              restrictedInfo[index].close();
+            }
+          });
+
+          marker.addListener('click', function() {
+            if (!(isInfoWindowOpen(infoWindow))){
+              infoWindow.open(map, marker);
+              infoCloser(restrictedInfo, index);
+            } else {
+              restrictedInfo[index].close();
+            }
+          });
+          infoWindow.open(map, marker);
+          infoCloser(restrictedInfo, index);
+          ok = false;
+        } else {
+
+        }
+      });
+    }
+
+    function traceP(){
+      ok = true;
+      //Allowing to draw shapes in the Client Side
+      if(drawingTool.getMap()) {
+          drawingTool.setMap(null); // Used to disable the Polygon tool
+          drawingTool = new google.maps.drawing.DrawingManager();
+      }
+      drawingTool.setOptions({
+          drawingMode : google.maps.drawing.OverlayType.POLYGON,
+          drawingControl : true,
+          drawingControlOptions : {
+              position : google.maps.ControlPosition.TOP_CENTER,
+              drawingModes : [google.maps.drawing.OverlayType.POLYGON]
+          }
+      });
+
+      drawingTool.setMap(map); 
+
+      google.maps.event.addListener(drawingTool,'polygoncomplete',function(polygon) {
+        polygon.setEditable(true);
+        polygon.setOptions({
+          strokeColor: 'blue',
+          fillColor: 'blue',
+        })
+        drawingTool.setMap(null);
+
+        var bounds = new google.maps.LatLngBounds()
+        polygon.getPath().forEach(function(element,index){bounds.extend(element)});
+        if (ok) {
+          ok = false;
+          parkinglotArea.push(polygon);
+          var index = parkinglotArea.indexOf(polygon);
+          var marker = new google.maps.Marker({
+            position: bounds.getCenter(), 
+            map: map,
+            streetViewControl: true,
+            icon:'images/parking2.png'
+          });
+          parkinglotMark.push(marker);
+
+          var content = 
+            '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deleteArea3(' + index + ')"></div>  ';
+          var infoWindow = new google.maps.InfoWindow({content: content});
+          parkinglotInfo.push(infoWindow);
+
+          polygon.addListener('click', function() {
+            if (!(isInfoWindowOpen(infoWindow))){
+              infoWindow.open(map, marker);
+              infoCloser(parkinglotInfo, index);
+            } else {
+              parkinglotInfo[index].close();
+            }
+          });
+
+          marker.addListener('click', function() {
+            if (!(isInfoWindowOpen(infoWindow))){
+              infoWindow.open(map, marker);
+              infoCloser(parkinglotInfo, index);
+            } else {
+              parkinglotInfo[index].close();
+            }
+          });
+          infoWindow.open(map, marker);
+          infoCloser(parkinglotInfo, index);
+        }
+      });
+    }
+
+    /*function starttraceR(event){
+      var path = traceR.getPath();
+
+      // Because path is an MVCArray, we can simply append a new coordinate
+      // and it will automatically appear.
+      path.push(event.latLng);
+
+      // Add a new marker at the new plotted point on the polyline.
+      var marker = new google.maps.Marker({
+        position: event.latLng,
+        title: '#' + path.getLength(),
+        icon: 'images/restricted1.png',
+        map: map
+      });
+
+      marker.addListener('click', function(){
+        if(this.title == '#1'){
+          alert('bitch!');
+          traceR = null;
+          google.maps.event.clearInstanceListeners(map);
+        }
+      });
+    }
+
+    function stoptraceR(event){
+      alert('hey girl')
+      google.maps.event.removeListener(map, 'click');
+    }*/
+
+    /**
+     * Update a map's viewport to fit each geometry in a dataset
+     * @param {google.maps.Map} map The map to adjust
+     */
+    function zoom(map) {
+      var bounds = new google.maps.LatLngBounds();
+      map.data.forEach(function(feature) {
+        processPoints(feature.getGeometry(), bounds.extend, bounds);
+      });
+      map.fitBounds(bounds);
+      map.data.forEach(function(feature) {
+        if(feature.getGeometry() instanceof google.maps.Data.Point){
+          map.data.remove(feature);
+        }
+      });
+    }
+
+    /**
+     * Process each point in a Geometry, regardless of how deep the points may lie.
+     * @param {google.maps.Data.Geometry} geometry The structure to process
+     * @param {function(google.maps.LatLng)} callback A function to call on each
+     *     LatLng point encountered (e.g. Array.push)
+     * @param {Object} thisArg The value of 'this' as provided to 'callback' (e.g.
+     *     myArray)
+     */
+    function processPoints(geometry, callback, thisArg) {
+      if (geometry instanceof google.maps.LatLng) {
+        callback.call(thisArg, geometry);
+      } else if (geometry instanceof google.maps.Data.Point) {
+        callback.call(thisArg, geometry.get());
+        placePermaMarker(geometry.get());
+      } else {
+        geometry.getArray().forEach(function(g) {
+          processPoints(g, callback, thisArg);
+        });
+      }
+    }
+
+    function placeMarker(location) {
+      var marker = new google.maps.Marker({
+        position: location, 
+        draggable: true,
+        map: map,
+        streetViewControl: true,
+        icon:'images/pin1.png'
+      });
+
+      markers.push(marker);
+      var index = markers.indexOf(marker);
+
+      var content = 
+        '<input class="inputTitle" type="text" name="bldng" id="title' + index + '" value="Enter Title here" onclick="this.select()" onkeydown="setName(' + index + ', event)">' + 
+        '<textarea class="inputDetails" id="details' + index + '" value="Enter details here" onclick="this.select()" onkeydown="setDetails(' + index + ', event)">Enter Description here.</textarea>' +
+        '<div class="buttonGroup">' + 
+        '<img class="pinMedia" id="directory"  src="images/directory.png" width="25" height="25" onclick="setPlans(' + index + ')">' + 
+        '<img class="pinMedia" id="photo"  src="images/photo.png" width="25" height="25" onclick="setPhotos(' + index + ')">' +
+        '<img class="pinMedia" id="video"  src="images/video.png" width="25" height="25" onclick="setVideos(' + index + ')">' +
+        '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deletePin1(' + index + ')"></div>  ';
+      var infoWindow = new google.maps.InfoWindow({content: content});
+      markerInfo.push(infoWindow);
+      marker.addListener('click', function() {
+        if (!(isInfoWindowOpen(infoWindow))){
+          infoWindow.open(map, marker);
+          infoCloser(markerInfo, index);
+        } else {
+          markerInfo[index].close();
+        }
+        $('#details' + index).val(marker.getPosition().lng() + "," + marker.getPosition().lat());
+      });
+      infoWindow.open(map, marker);
+      infoCloser(markerInfo, index);
+    }
+
+    function restrictMarker(location) {
+      var restrict = new google.maps.Marker({
+        position: location, 
+        draggable: true,
+        map: map,
+        streetViewControl: true,
+        icon:'images/restricted1.png'
+      });
+
+      restricts.push(restrict);
+      var index = restricts.indexOf(restrict);
+
+      var content = 
+        '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deletePin2(' + index + ')"></div>  ';
+      var infoWindow = new google.maps.InfoWindow({content: content});
+      restrictInfo.push(infoWindow);
+      restrict.addListener('click', function() {
+        if (!(isInfoWindowOpen(infoWindow))){
+          infoWindow.open(map, restrict);
+          infoCloser(restrictInfo, index);
+        } else {
+          restrictInfo[index].close();
+        }
+      });
+      infoWindow.open(map, restrict);
+      infoCloser(restrictInfo, index);
+    }
+
+    function parkingMarker(location) {
+      var parking = new google.maps.Marker({
+        position: location, 
+        draggable: true,
+        map: map,
+        streetViewControl: true,
+        icon:'images/parking1.png'
+      });
+
+      parkings.push(parking);
+      var index = parkings.indexOf(parking);
+
+      var content = 
+        '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deletePin3(' + index + ')"></div>  ';
+      var infoWindow = new google.maps.InfoWindow({content: content});
+      parkingInfo.push(infoWindow);
+      parking.addListener('click', function() {
+        if (!(isInfoWindowOpen(infoWindow))){
+          infoWindow.open(map, parking);
+          infoCloser(parkingInfo, index);
+        } else {
+          parkingInfo[index].close();
+        }
+      });
+      infoWindow.open(map, parking);
+      infoCloser(parkingInfo, index);
+    }
+
+    function placePermaMarker(location) {
+      var marker = new google.maps.Marker({
+        position: location, 
+        map: map,
+        streetViewControl: true,
+        icon:'images/pin1.png'
+      });
+
+      markers.push(marker);
+      var index = markers.indexOf(marker);
+    }
+
+    function isInfoWindowOpen(infoWindow){
+        var map = infoWindow.getMap();
+        return (map !== null && typeof map !== "undefined");
+    }
+
+    function setPlans(){
+      alert('Insert Plans Uploader Here.');
+    }
+
+    function setPhotos(){
+      alert('Insert Photo Uploader Here');
+    }
+
+    function setVideos(){
+      alert('Insert Video Linker Here');
+    }
+
+    function deletePin1(index){
+      if (confirm("Are you sure you want to delete this pin?") == true) {
+        markers[index].setMap(null);
+
+        /*if(index > -1){
+          markers.splice(index, 1);
+          markerInfo.splice(index, 1);
+        }*/
+      } else {
+        
+      }
+    }
+
+    function deletePin2(index){
+      if (confirm("Are you sure you want to delete this pin?") == true) {
+        restricts[index].setMap(null);
+
+        /*if(index > -1){
+          restricts.splice(index, 1);
+          restrictInfo.splice(index, 1);
+        }*/
+      } else {
+        
+      }
+    }
+
+    function deletePin3(index){
+      if (confirm("Are you sure you want to delete this pin?") == true) {
+        parkings[index].setMap(null);
+
+        /*if(index > -1){
+          parkings.splice(index, 1);
+          parkingInfo.splice(index, 1);
+        }*/
+      } else {
+
+      }
+    }
+
+    function deleteArea1(index){
+      if (confirm("Are you sure you want to delete this pin?") == true) {
+        markedMark[index].setMap(null);
+        markedArea[index].setMap(null);
+        
+        /*if(index > -1){
+          restrictedMark.splice(index, 1);
+          restrictedArea.splice(index, 1);
+          restrictedInfo.splice(index, 1);
+        }*/
+      } else {
+
+      }
+    }
+
+    function deleteArea2(index){
+      if (confirm("Are you sure you want to delete this pin?") == true) {
+        restrictedMark[index].setMap(null);
+        restrictedArea[index].setMap(null);
+        
+        /*if(index > -1){
+          restrictedMark.splice(index, 1);
+          restrictedArea.splice(index, 1);
+          restrictedInfo.splice(index, 1);
+        }*/
+      } else {
+
+      }
+    }
+
+    function deleteArea3(index){
+      if (confirm("Are you sure you want to delete this pin?") == true) {
+        parkinglotMark[index].setMap(null);
+        parkinglotArea[index].setMap(null);
+        
+        /*if(index > -1){
+          restrictedMark.splice(index, 1);
+          restrictedArea.splice(index, 1);
+          restrictedInfo.splice(index, 1);
+        }*/
+      } else {
+
+      }
+    }
+
+    function infoCloser(infoWindows, index){
+      for (var i = infoWindows.length - 1; i >= 0; i--) {
+        if(index != i){
+          infoWindows[i].close();
+        }
+      }
+    }
+
+    function setName(index, event){
+      if(event.keyCode == 13){
+        markers[index].setLabel($('#title' + index).val());
+        alert(markers[index].getLabel());
+      }
+    }
+
+    function setDetails(index, event){
+
+    }
+  </script>
+    <!-- DOM (drag/drop) functions  -->
+<!--   <script>
+    function initEvents() {
+      // set up the drag & drop events
+      var mapContainer = document.getElementById('mapCanvas');
+      var dropContainer = document.getElementById('drop-container');
+
+      // map-specific events
+      mapContainer.addEventListener('dragenter', showPanel, false);
+
+      // overlay specific events (since it only appears once drag starts)
+      dropContainer.addEventListener('dragover', showPanel, false);
+      dropContainer.addEventListener('drop', handleDrop, false);
+      dropContainer.addEventListener('dragleave', hidePanel, false);
+    }
+
+    function showPanel(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      document.getElementById('drop-container').style.display = 'block';
+      return false;
+    }
+
+    function hidePanel(e) {
+      document.getElementById('drop-container').style.display = 'none';
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      hidePanel(e);
+
+      var files = e.dataTransfer.files;
+      if (files.length) {
+        // process file(s) being dropped
+        // grab the file data from each file
+        for (var i = 0, file; file = files[i]; i++) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            loadGeoJsonString(e.target.result);
+          };
+          reader.onerror = function(e) {
+            console.error('reading failed');
+          };
+          reader.readAsText(file);
+        }
+      } else {
+        // process non-file (e.g. text or html) content being dropped
+        // grab the plain text version of the data
+        var plainText = e.dataTransfer.getData('text/plain');
+        if (plainText) {
+          loadGeoJsonString(plainText);
+        }
+      }
+
+      // prevent drag event from bubbling further
+      return false;
+    }
+  </script> -->
+</body>
+</html>

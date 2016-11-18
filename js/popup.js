@@ -1,5 +1,8 @@
 jQuery(document).ready(function($){
     $('.cd-popup-trigger').bind('click touchend', function(event){
+    	if($('.panel-container').hasClass('is-visible')){
+    		$(this).removeClass('is-visible');
+        }
 		$('.panel-container').addClass('is-visible');
 	});
 	

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>UPC INTERACTIVE MAP</title>
+    <link rel="stylesheet" href="css/map/reset.css">
+    <link rel="stylesheet" href="css/map/style.css">
+    <link rel="stylesheet" href="css/popup/floorplan.css">
+    <link rel="stylesheet" href="css/popup/style.css">
+    <link rel="stylesheet" href="css/sidebar/demo.css">
+    <link rel="stylesheet" href="css/sidebar/component.css">
+    <link rel="stylesheet" href="css/floorplans_proto.css">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/panzoom.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  </head>
+
+  <body ng-app="myApp" ng-controller="MainController">
+    <section id="st-container">
+      <div class="container" style=" height: 100%; width: 100%;">
+        <div id="panzoom" class="distribution-map" style="width:964px; height:625px"> 
+          <img class = "mapimg" id = "image1" src="images/map.png" style="height:625px; width:1000">
+          <span ng-repeat="pin in pins">
+            <div class="cd-popup-trigger">
+              <button class="map-point" style="top:{{pin.t}};left:{{pin.l}}; height:1px, width:1px" data-effect="st-effect-1"  ng-click="setDetails(pin)" ng-touchstart="onTouchstart(pin)">
+                <img id = "image1" src="images/pin.png" width="50" height="50" style="right:9px">
+              </button>
+            </div>
+          </span>     
+        </div>
+      </div>
+
+      <div class="margin-div">
+        <button class="button1" id="reset" title="Resets the Map"><img src="images/reload.png" style="height: 30px; width: 30px;"></button>
+        <button class="button5" onclick=newDoc() title="Go to Home Page"><img src="images/home.png"  style="height: 30px; width: 30px;"></button>
+      </div>
+
+      <div class="modal" id="myModal" >
+        <div class="modal-content" style="background-color: white;">
+          <!-- <div class="modal-head">
+            <h6>{{ title }}</h6>
+          </div> -->
+          <div class="modal-body" >
+            <section id="st-container" style="height: 100%; ">
+              <div class="containerz">
+                <div id="panzoom" class="distribution-map" style="max-width: 70%;" > 
+                  <div class="fp-content fp-display-container" >
+                      <img src={{photo}} style="width:100%" >
+                    </div>
+                </div>
+              </div>
+            </section>
+
+            <ul style="position: absolute; top: 100px; left: 50px; margin: 20px; ">
+              
+            </ul>
+          </div>
+
+          <div class="buttonGroup">
+          <ul class="ulz">
+            <button title="Collapse Modal" onclick="closeModal()" class="closeMod"><img src="images/back.png" style="width: 35px; height: 35px"></button>
+            <button class="button7" title="Reset Room Directory" style="padding-top: 3px;"><img src="images/reset.png" style="width: 35px; height: 35px"></button>
+            <button class="button7" ng-repeat="x in fps"  ng-click="setPhoto(x)" title="Move to floor {{x.flr}}">{{x.flr}}</button>
+          </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-container" style="max-width: {{ max }}">
+      <div class="panel" style="max-width: {{ max }}">
+        <div class="rect">
+          <img src="images/mobile-map.jpg" style="height: 110%; width: auto">
+        </div>
+        <button title="Collapse Panel" onclick="closePanel()" class="EX"><img src="images/next.png" width="50" height="50" style="bottom:5px;right:10px"></button>
+        <div class="name">
+          <h6>{{ title }}</h6>
+        </div>
+        <div class="list" style="max-width: {{max}}; padding-left: {{padleft}};">
+          <ul class="lul">
+            <!-- <button class="butt" id = "directory" style="font-size: {{ fsize }}" ng-show="title=='UNDERGRADUATE BUILDING' || title=='MANAGEMENT BUILDING' || title == 'ARTS and SCIENCES BUILDING' || title=='ADMINISTRATION BUILDING'">
+              <img src="images/directory.png" style="height: 50px; width: 50px">
+              <p style="position: relative; left: -3px;">Rooms</p>
+            </button> -->
+            <button class="butt" id = "directory" style="font-size: {{ fsize }};" >
+              <img src="images/directory.png" style="height: 50px; width: 50px">
+              <p style="position: relative; left: -3px;">Rooms</p>
+            </button>
+
+            <button class="butt" id="photo" style="font-size: {{ fsize }};">
+              <img src="images/photos.png" style="height: 50px; width: 50px">
+              <p style="position: relative; left: -6px;">Photos</p>
+            </button> 
+
+            <button class="butt" id="video" style="font-size: {{ fsize }};">
+              <img src="images/video.png" style="height: 50px; width: 50px">
+              <p>Videos</p>
+            </button>
+          </ul>
+        </div>
+        <div class="des">
+          <h7>Description:</h7>
+          <p style="font-size: {{ fsize }}">{{description}}</p>
+        </div>
+      </div>
+    </div>
+
+    </section>
+
+    
+
+    <script id="ScreenOrientation">
+      $(document).ready(function() {
+        $(window).on('orientationchange', function(event) {
+            $('.cd-popup').removeClass('is-visible');
+            $('.modal').removeClass('visible');
+        });
+      });
+    </script>
+
+    <script id="Modes">    
+      var modal = document.getElementById('myModal');
+      var btn = document.getElementById("directory");
+      btn.onclick = function() {
+          $('.modal').addClass('visible');
+      }
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          $('.modal').removeClass('visible');
+        }
+      }
+    </script>
+
+    <script id="MapNeeds">         
+      function newDoc() {
+          window.location.assign("/")
+      }
+
+      function closePanel() {
+          $('.panel-container').removeClass('is-visible');
+      }
+
+      function closeModal() {
+          $('.modal').removeClass('visible');
+      }
+
+      (function() {
+        /*$('.distribution-map button').on('mousedown touchstart', function( e ) {
+            e.stopImmediatePropagation();
+        });*/
+
+        /*$('.button button5').on('mousedown touchstart', function( e ) {
+            e.stopImmediatePropagation();
+        });
+
+        $('.button button1').on('mousedown touchstart', function( e ) {
+            e.stopImmediatePropagation();
+        });*/
+
+        var $section = $('#st-container');
+        var $panzoom = $section.find('.container').panzoom({
+           $reset: $("#reset"),
+        });
+        var $panzoom1 = $section.find('.containerz').panzoom({
+           $reset: $(".button7"),
+        });
+
+        $panzoom.on('mousewheel.focal', function( e ) {
+          e.preventDefault();
+          var delta = e.delta || e.originalEvent.wheelDelta;
+          var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+          $panzoom.panzoom('zoom', zoomOut, {
+            animate: false,
+            panOnlyWhenZoomed: true,
+            focal: e
+          });
+        });
+
+        $panzoom1.on('mousewheel.focal', function( e ) {
+          e.preventDefault();
+          var delta = e.delta || e.originalEvent.wheelDelta;
+          var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+          $panzoom1.panzoom('zoom', zoomOut, {
+            animate: false,
+            panOnlyWhenZoomed: true,
+            focal: e
+          });
+        });
+      })();
+    </script>
+    <script src="js/angular.js"></script>
+    <script src="js/popup.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/MainController.js"></script> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  </body>
+</html>

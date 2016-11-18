@@ -5,8 +5,9 @@
     <title>Create Tour</title>
     <link rel="stylesheet" href="css/creator/editor.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
   	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-  	<script src="node_modules/ngtouch/build/ngTouch.min.js"></script>
   	<script src="js/app.js"></script>
     <script src="js/MainController.js"></script> 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -16,30 +17,47 @@
 
 	<body ng-app="myApp" ng-controller="MainController" >
 		<section id="EditorBackground">
-			<div class="editBody">
+			<div class="editBody" id="editBody">
 				<div class="map-container" id="map-container">
 					<img class="map">
-        	<div ng-repeat="pin in pins" class="pin" style="top:{{ pin.t }};left:{{ pin.l }};" id="{{$index}}" title="{{pin.Bldng}}">
+        	<!-- <div ng-repeat="pin in pins" class="pin" style="top:{{ pin.t }};left:{{ pin.l }};" id="{{$index}}" title="{{pin.Bldng}}">
 						<img id="pin_{{$index + 1}}" class="pinImg" src="images/pin.png" width="50" height="50">
 						<ul class="bldng">{{pin.Bldng}}</ul>
-		      </div>	
+		      </div> -->	
 				</div>
 			</div>
 
-			<div class="toolbar" >
+			<div class="toolShelf">
+			  <div class="toolBox">
+			    <div class="pinTool">
+						<img id="pinimg" class="pinImg" src="images/pin1.png" width="25" height="37">
+	        </div>
+			  </div>
+			  <div class="toolBox">
+			    <div class="pinTool">
+						<img id="pinimg" class="pinImg" src="images/pin1.png" width="25" height="37">
+	        </div>
+			  </div>
+			</div>
+
+			<!-- <div class="toolbar" >
 				<div class="toolPanel" >
 					<div class="pinHolder">
 						<div class="pinTool">
-							<img id="pinimg" class="pinImg" src="images/pin.png" width="50" height="50">
+							<img id="pinimg" class="pinImg" src="images/pin.png" width="auto" height="37">
 		        </div>	
 					</div>
 
-					<div class="toolContent">
-						<input class="inputBox" type="text" name="mapWords" value="images/map.png">
+					<div class="pinHolder">
+						<div class="pinTool">
+							<img id="pinimg" class="pinImg" src="images/start.png" width="auto" height="37">
+		        </div>	
 					</div>
 
-					<div class="toolContent">
-						<button class="submitUrl" onclick="setSrc()">Submit</button>
+					<div class="pinHolder">
+						<div class="pinTool">
+							<img id="pinimg" class="pinImg" src="images/finish.png" width="auto" height="37">
+		        </div>	
 					</div>
 
 					<div class="toolContent">
@@ -47,18 +65,179 @@
 					</div>
 
 					<div class="toolContent">
-						<button class="enabler" onclick="enableThem()">Edit</button>
+						<button class="enabler" onclick="enableThem()">Release</button>
+					</div>
+
+					<div class="toolContent">
+						<button class="changeMap" onclick="changeMap()">Change Map</button>
 					</div>
 				</div>
-			</div>
+			</div> -->
 
 			<div class="trashcan">
 				<img class="trashImg" src="images/trash-can.svg">
 			</div>
 
+			<div class="greyArea">
+				<div class="mapUpload">
+					<div class="dropHere">
+						
+					</div>
+					<div class="inputGroup">
+						<label for="localUp" class="loclabel">Browse</label>
+						<input type="file" id="localUp" onchange="readURL(this);" style="display: none;" accept="image/*" />
+					</div>
+					<div class="inputUrl">
+						<input class="inputBox" type="text" name="mapWords" id="inputBox">
+					</div>
+					<div class="srcGoogle">
+						<!-- <img src="http://vectorlogo4u.com/wp-content/uploads/2015/09/google-maps-vector-720x340.png" height="20%" width="20%" onclick="prepMap()"> -->
+						<a class="prepper" onclick="prepMap()">Source from Google Maps</a>
+					</div>
+					<div class="close"><img src="images/x.png" height="15" width="15" onclick="closeUploader()"></div>	
+				</div>
+
+				<div class="mapPreview">
+					<div class="previewer">
+						<img class="prevMap">
+					</div>
+					<div class="googleMap" id="googleMap">
+
+					</div>
+					<div class="Submit"><button class="setMap" onclick="setSrc()">Set Map</button></div>
+					<div class="backTo"><button class="backOne" onclick="backT()">Go Back</button></div>
+					<div class="close"><img src="images/x.png" height="15" width="15" onclick="closePreviewer()"></div>	
+				</div>
+
+			</div>
+
+						<!-- <div class="frmap" onclick="showMap()">
+							<div class="maphead">
+								Upload Map from Google Maps:
+							</div>
+							<div class="mapbody">
+								<img class="mapImg">
+								<button class="setMap" onclick="loadMap()">Submit</button>
+							</div>
+						</div> -->
+
 		</section>
 
 		<script>
+			var map;
+			var mapUrl;
+			var sourced = false;
+
+			function prepMap(){
+				$('.mapUpload').attr('style', 'visibility: hidden;');
+				$('.mapPreview').attr('style', 'visibility: visible;');
+				$('.previewer').attr('style', 'visibility: hidden;');
+				$('.googleMap').attr('style', 'visibility: visible;');
+				sourced = true;
+			}
+
+			$('.inputUrl').on('keyup', function (e) {
+		    if (e.keyCode == 13) {
+		    	$('.mapUpload').attr('style', 'visibility: hidden;');
+	    		$('.mapPreview').attr('style', 'visibility: visible;');
+	    		$('.googleMap').attr('style', 'visibility: hidden;');
+					$('.previewer').attr('style', 'visibility: visible;');
+					sourced = false;
+		      mapUrl = $('.inputBox').val();
+					var img = new Image();
+					img.onload = function () {
+			    	if(img.width > img.height){
+			    		$('.prevMap')
+			        .attr('src', mapUrl)
+			        .width('100%')
+			        .height('auto');
+			    	} else {
+			    		$('.prevMap')
+			        .attr('src', mapUrl)
+			        .width('auto')
+			        .height('100%');
+			    	}
+			    };
+			    img.src = mapUrl;
+		  	}
+			});
+
+	    $('.mapUpload').on({
+		    'dragover dragenter': function(e) {
+		        e.preventDefault();
+		        e.stopPropagation();
+		    },
+		    'drop': function(e) {
+	     	 	e.preventDefault();
+		      e.stopPropagation();
+	     	 	readURL(e.originalEvent.dataTransfer);
+	    	}
+	    });
+
+	    function backT(){
+	    	$('.mapUpload').attr('style', 'visibility: visible;');
+	    	$('.mapPreview').attr('style', 'visibility: hidden;');
+	    	$('.googleMap').attr('style', 'visibility: hidden;');
+				$('.previewer').attr('style', 'visibility: hidden;');
+				$('.prevMap').src= " ";
+				sourced = false;
+	    }
+
+	    function readURL(input) {
+	    	$('.mapUpload').attr('style', 'visibility: hidden;');
+	    	$('.mapPreview').attr('style', 'visibility: visible;');
+	    	$('.googleMap').attr('style', 'visibility: hidden;');
+				$('.previewer').attr('style', 'visibility: visible;');
+				sourced = false;
+			  if (input.files && input.files[0]) {
+			    var reader = new FileReader();
+
+			    reader.onload = function (e) {
+			    	var img = new Image();
+			    	img.onload = function(){
+			    		if(img.width < img.height){
+				    		$('.prevMap')
+					        .attr('src', this.src)
+					        .width('auto')
+					        .height($('.previewer').innerHeight());
+				    	} else {
+				    		$('.prevMap')
+					        .attr('src', this.src)
+					        .width('auto')
+					        .height('100%');
+				    	}
+			    	}
+
+			    	img.src = e.target.result;
+			    	mapUrl = e.target.result;
+			    };
+			    reader.readAsDataURL(input.files[0]);
+			  }
+			}
+
+			function closeUploader(){
+				$('.greyArea').attr('style', 'visibility: hidden;');
+				$('.mapUpload').attr('style', 'visibility: hidden;');
+			}
+
+			function closePreviewer(){
+				$('.greyArea').attr('style', 'visibility: hidden;');
+				$('.mapPreview').attr('style', 'visibility: hidden;');
+			}
+
+			function changeMap(){
+				$('.mapUpload').attr('style', 'visibility: visible;');
+				$('.greyArea').attr('style', 'visibility: visible;');
+			}
+
+			function showMap(){
+				$('.googleMap').attr('style', 'visibility: visible');
+			}
+
+			function hideMap(){
+				$('.googleMap').attr('style', 'visibility: hidden');
+			}
+
 			function disableThem(){
 				$('.map').resizable({ disabled: true });
 				$('.map-container').draggable({ disabled: true });
@@ -74,31 +253,42 @@
 				$('.map').resizable({ disabled: false });
 				$('.map-container').draggable({ disabled: false });
 				$('.pin').draggable({ disabled: false });
-
-				/*for(var c = 0; c < $('.pin').length; c++){
-					if($($('.pin')[c]).hasClass('ui-draggable')){
-						$($('.pin')[c]).draggable('destroy');
-					}
-
-		      $($('.pin')[c]).draggable({revert: 'invalid'}).click(function(){
-        		alert("yup");
-        	});
-				}*/
 			}
 
-			/*function displayID(IDNUM){
-				alert(IDNUM);
-			}*/
+			function initMap() {
+        var uluru = {lat: 10.3223812, lng: 123.898717};
+        map = new google.maps.Map(document.getElementById('googleMap'), {
+          zoom: 16,
+          center: uluru
+        });
 
+        /*var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });*/
+      }
 
 			function setSrc(){
+				$('.prevMap').src = "";
+				$('.mapPreview').attr('style', 'visibility: hidden;');
+				$('.greyArea').attr('style', 'visibility: hidden;');
+				$('.googleMap').attr('style', 'visibility: hidden;');
+				$('.previewer').attr('style', 'visibility: hidden;');
 				var innerWidth;
 				var outerWidth;
 				var q
+
+				if(sourced == true){
+					var mapZ = map.getZoom() + 1;
+					var mapC = map.getCenter().toUrlValue();
+					var mapT = map.getMapTypeId();
+					var mapA = map.getTilt();
+					mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + mapC + "&zoom=" + mapZ + "&tilt=" + mapA + "&size=640x640&maptype=" + mapT + "&style=element:labels%7Cvisibility:off&key=AIzaSyCB1PXJVGmlhG4PsJvOH5kTH7RFHcmnZ-E";
+				}
+
 				for(var c = 0; c < $('.pin').length; c++){
 					innerWidth = $($('.bldng')[c]).width();
 					outerWidth = $($('.bldng')[c]).parent().width();
-		
 
 					if(innerWidth > outerWidth) {
 					    var marginLeft = -1 * (innerWidth - outerWidth)/2;
@@ -113,10 +303,10 @@
 				}
 
 				var mapC = document.getElementById('map-container');
-    		var x;
-    		var y;
-				var img = new Image();
-		    img.onload = function(){
+    			var x;
+    			var y;
+					var img = new Image();
+		    	img.onload = function(){
 		        x = this.width;
 		        y = this.height;
 
@@ -149,17 +339,12 @@
 			        y = y - ($('.editBody').innerHeight() * 0.05);
 		        }
 
-			       
 		        mapC.style.width = x;
 		        mapC.style.height = y;
 
-		        
-
-		        /*alert($('.editBody').innerWidth());
-		        alert(window.innerWidth);*/
 		        $('.map').attr('width', x);
 		        $('.map').attr('width', y);
-		        $('.map').attr('src', $('.inputBox').val());
+		        $('.map').attr('src', mapUrl);
 		        $('.map').resizable('destroy');
 		        $('.map').resizable();
 		        $('.map').resizable("resizeTo", {
@@ -167,10 +352,8 @@
 			        width: x 
 			    	});
 		    };
-		    img.src = $('.inputBox').val();
+		    img.src = mapUrl;
 			}
-
-
 
 			$('.map').resizable();
 
@@ -216,17 +399,15 @@
 
 			$( function() {
 		    $(".pinTool").draggable({
-		    	/*grid: [ 1, 1 ],
-					appendTo: '.editBody',
-				  containment: "window",
-					cursor: 'move',
-					revertDuration: 100,*/
 					cursor: "move",
 					revert: 'invalid',
 					appendTo: '.map-container',
-					helper: 'clone'
-	    	});
+					helper: 'clone',
+					drag: function(e){
 
+					}
+
+	    	});
 
 	    	$(".trashcan").droppable({
 	    		accept: ".pin", 
@@ -234,13 +415,13 @@
 						$(ui.draggable).remove();
 				  }
 	    	});
-	    	
-				/**
-					File Uploader from Url
-	    	**/
-	    	
+
 		  } );
 		</script>
+
+		<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCB1PXJVGmlhG4PsJvOH5kTH7RFHcmnZ-E&callback=initMap">
+    </script>
 	
 	</body>
 </html>

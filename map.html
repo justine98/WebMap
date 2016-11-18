@@ -33,12 +33,16 @@
         </div>
       </div>
 
+      <div class="d2g" style="position: absolute; bottom: 30px; height: 50px; width:50px; left: 30px;">
+        <img src="images/gmap.png" height="50" width="50" onclick="r2g()" style=" border: solid; color: white; border-width: 3px;">
+      </div>
+
       <div class="margin-div">
         <ul class="ulx">
         <button class="button1" style="{{deets}}" id="reset" title="Reset the Map"><img src="images/reload.png" style="height: 30px; width: 30px;"></button>
         </ul>
         <ul class="ulx">
-        <button class="button5" style="{{deets}}" onclick=newDoc() title="Go to Home Page"><img src="images/home.png"  style="height: 30px; width: 30px;"></button>
+        <button class="button5" style="{{deets}}" onclick="newDoc()" title="Go to Home Page"><img src="images/home.png"  style="height: 30px; width: 30px;"></button>
         </ul>
         <ul class="ulx">
         <button class="zoom" id="zoomIn">+</button>
@@ -57,12 +61,10 @@
             <h6>{{ title }}</h6>
           </div> -->
           <div class="modal-body" >
-            <section id="st-container" style="height: 100%; ">
-              <div class="containerz">
-                <div id="panzoom" class="distribution-map" style="max-width: 70%;" > 
-                  <div class="fp-content fp-display-container" >
+            <section id="st-container" style="height: 100%; background-color: white">
+              <div class="containerz" style="display: flex; justify-content: center; background-color: white; height: 100%; ">
+                <div id="panzoom" class="distribution-map" style="max-width: 70%; position: absolute; align-self:center;" > 
                       <img src={{photo}} style="width: 100%;">
-                  </div>
                 </div>
               </div>
             </section>
@@ -130,7 +132,7 @@
     <div class="panel-container" style="max-width: {{ max }}">
       <div class="panel" style="max-width: {{ max }}">
         <div class="rect">
-          <img class="slides" ng-repeat="x in pps" src={{x.Dloc}} style="height: 110%; width: auto">
+          <iframe width="100%" height="250" src={{tourlink}} allowfullscreen></iframe>
         </div>
         <button title="Collapse Panel" onclick="closePanel()" class="EX"><img src="images/next.png" width="50" height="50" style="bottom:5px;right:10px"></button>
         <div class="name">
@@ -148,7 +150,7 @@
             </button>
 
             <button class="butt" id="photo" title="Photo Gallery" onclick="openPhoto()" style="font-size: {{ fsize }};">
-              <img src="images/photos.png" style="height: 50px; width: 50px">
+              <img src="images/photo.png" style="height: 50px; width: 50px">
               <p style="position: relative; left: -6px;">Photos</p>
             </button> 
 
@@ -175,8 +177,13 @@
     </script>
 
     <script id="Modes">
+      function r2g(){
+        window.location.assign("/gmap.html");
+      }
+
       function openRoom(){
         $($('.modal')[0]).addClass('visible');
+        $panzoom1.panzoom("reset");
       }
 
       function openPhoto(){
@@ -192,6 +199,7 @@
       window.onclick = function(event) {
         if (event.target == modal) {
           $($('.modal')[0]).removeClass('visible');
+          $panzoom1.panzoom("reset");
         } 
         if (event.target == modal1) {
           $($('.modal')[1]).removeClass('visible');
@@ -200,6 +208,7 @@
           $($('.modal')[2]).removeClass('visible');
         } 
       }
+
     </script>
 
     <script>
@@ -321,7 +330,7 @@
       }*/
 
       function newDoc() {
-          window.location.assign("/")
+        window.location.assign("/");
       }
 
       function closePanel() {
@@ -354,9 +363,10 @@
 
       function closeModal() {
           $('.modal').removeClass('visible');
+          $panzoom1.panzoom("reset");
       }
 
-      var myIndex = 0;
+      /*var myIndex = 0;
       carousel();
 
       function carousel() {
@@ -369,7 +379,7 @@
         if (myIndex > x.length) {myIndex = 1}
         x[myIndex-1].style.display = "block";
         setTimeout(carousel, 2000); // Change image every 2 seconds
-      }
+      }*/
 
       
         /*$('.distribution-map button').on('mousedown touchstart', function( e ) {
@@ -396,7 +406,7 @@
 
         var $panzoom1 = $section.find('.containerz').panzoom({
            $reset: $(".button7"),
-           contain: 'automatic'
+          /* contain: 'automatic'*/
         });
 
         $panzoom.on('mousewheel.focal', function( e ) {
@@ -417,30 +427,7 @@
             var y = event.clientY;
             x = (w-x) + 190;
             y = (h-y);
-          if($('.panel-container').hasClass('is-visible')){
-            /*$panzoom.panzoom('zoom', 1, true);
-            $panzoom.panzoom('zoom', 2,  {
-              animate: true,
-              focal: event
-            });*/
-          } else {
-            /*$panzoom.panzoom("pan", 100, 0, { relative: true });*/
-            /*$panzoom.panzoom('zoom', 3,  {
-              animate: true,
-              focal: event
-            });*//*
-            $panzoom.panzoom("reset");*/
-            
-            /*$panzoom.panzoom("zoom", 1, {
-              animate: true
-            });*/
-
-            
-
-            /*alert("W:" +  w + " H:" + h + " X:" + x + " Y:" + y)*/;
-            /*
-            $panzoom.panzoom("zoom", 2, true);*/
-          }
+          
           $panzoom.panzoom('zoom', 2, {
               animate: true,
               focal: event

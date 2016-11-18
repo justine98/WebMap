@@ -16,7 +16,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 						{Dloc:'images/gallery/Undergrad Building/NsmdSecondFloor.jpg'},
 						{Dloc:'images/gallery/Undergrad Building/NsmdSulod.jpg'}
 					]
-
+	$scope.map = 'images/map.png';
 
 	$scope.pins = 	[	{	t: '7.0%', l: '32.65%',ip: 'images/floorplans/NSMD/NSMD 1ST FLR.png', 
 							vip: 'https://www.youtube.com/embed/GCdwKhTtNNw',
@@ -94,6 +94,7 @@ app.controller('MainController', ($scope, $http, $sce) => {
 		// $scope.vidz = 'https://www.youtube.com/embed/wlsdMpnDBn8';
 		$scope.vidz = x.vip;
 		$scope.vidlink = $sce.trustAsResourceUrl($scope.vidz);
+		$scope.tourlink = $sce.trustAsResourceUrl($scope.vidz + '?autoplay=1');
 		angular.copy(x.f, $scope.fps)
 		angular.copy(x.pf, $scope.pps)
 	}
