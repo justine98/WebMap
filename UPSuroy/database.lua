@@ -1,4 +1,4 @@
-local myMap = require("mymap")
+local myApp = require("mymap")
 local composer = require("composer")
 local default = "floorplans/NA.png"
 
@@ -107,8 +107,8 @@ local mapSize = {
 	w = 4000,
 	h = 2500,
 }
-myMap.w = mapSize.w
-myMap.h =mapSize.h
+myApp.w = mapSize.w
+myApp.h =mapSize.h
 local mapPins  = {}
 	mapPins[1] = {
 		index = 1,
@@ -392,52 +392,12 @@ local mapPins  = {}
 
 
 
-local dx = 20
-
-
-local dy = 30
-myMap.group = display.newGroup()
-
-function pinTap(event) 
-	local p = event.target
-
-	print("event.lael", p.index)
-	if event.phase == 'started' then
-		print("pinTap detected")
-	end
-	--myMap.group:removeEventListener("touch", touchListener)
-	composer.gotoScene("mapoverlay", {time=250, effect="slideLeft", params={pinDetails = mapPins, index = p.index, floorplans = floorPlan, photos = photoFiles[p.index],  }})
-	--print("pintap")
-	return true;
-end
-rect = display.newImage(myMap.group, 'map.png',0,0)
-function pinHover(event)
-	p = e.target
-	p.alpha = 0.5
-end
-print(display.contentCenterX)
-print(myMap.group.x)
-print(myMap.group.y)
-local pinGroup = display.newGroup()
-for i=1, #mapPins do
-	print("loading pins")
-local pin = display.newImage('pin.png')
-
-	pin:scale(0.2, 0.2)
-	pin.x = myMap.group.x - mapSize.w/2 + mapPins[i].x
-	pin.y = myMap.group.y - mapSize.h/2 + mapPins[i].y
-	pin.index = i
-	pin:addEventListener("touch", pinTap)
-	--pin:addEventListener("touch")
-
-	pinGroup:insert(pin)
-
-end
-
-pinGroup.name = 1
 --pinGroup:addEventListener("touch", pinTap)
-myMap.pinGroup = pinGroup
---rect = display.newImage(myMap.group, pin)
-myMap.group:insert(pinGroup)
-myMap.group.contentCenterX = display.contentCenterX
--- myMap.group:scale(0.05, 0.05)
+myApp.mapPins= mapPins
+myApp.photos = photoFiles
+myApp.floorplans = floorPlan
+
+
+--rect = display.newImage(myApp.group, pin)
+
+-- myApp.group:scale(0.05, 0.05)

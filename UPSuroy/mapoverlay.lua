@@ -1,8 +1,9 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require("widget")
-local myMap = require("mymap")
+
 local widgetExtras = require("widget-extras")
+local myApp = require("mymap")
 
 local screenW, screenH = display.contentWidth, display.contentHeight
 local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.viewableContentHeight
@@ -18,12 +19,16 @@ local navBar
 local pins
 local index
 local descPressed = 0
---widget.theme = myMap.theme
+--widget.theme = myApp.theme
+
 
 local function goBack( event )
 	print(event.phase)
 	if event.phase == "ended" then
 		--composer.hideOverlay( "fade", 250 )
+		local currScene = composer.getSceneName( "current" )
+
+		composer.removeScene( currScene )
 		
 		composer.gotoScene("menu", "fade", 200)
 	end
@@ -37,13 +42,13 @@ local function showPanel( event )
     end
 local function setSlideNumber()
 		
-		navBar:setLabel(pins[index].label)
+	navBar:setLabel(pins[index].label)
 		--imageNumberTextShadow.text = imgNum .. " of " .. #images
 	end
 --function new( imageSet, slideBackground, top, bottom )	
 function scene:create( event )
 	local sceneGroup = self.view
-	print("create")
+	print("create mapoverlay")
 	local pad = 0
 	local top = top or 0
 	local bottom = bottom or 0
@@ -52,11 +57,10 @@ function scene:create( event )
 	if event.params and event.params.start then
 		start = event.params.start
 	end
-	pins = event.params.pinDetails
-	 index = event.params.index
-	 videostory = pins[index].video
-	 photos = event.params.photos
-
+	pins = myApp.mapPins
+	index = event.params.index
+	videostory = pins[index].video
+	 photos = myApp.photos[index]
 	assert(pins, "Error: pins list not set")
 
 	viewableScreenW = display.contentWidth
@@ -68,22 +72,25 @@ function scene:create( event )
     background.y = display.contentHeight / 2
     background.id = 'background'
     sceneGroup:insert(background)
-
+    textbox = native.newTextBox(display.contentWidth/2, 360, display.contentWidth,100)
+		textbox.size = 16
+		textbox.text = pins[index].text
+		textbox.isEditable = false
+		
+		sceneGroup:insert(textbox)
    -- sharingPanel = widget.newSharingPanel({
     --	})
-
+    	textbox.isVisible = true
     local vtPress = function(event)
+
     	local story =  videostory
-    	composer.showOverlay("videoScene", {time = 100, effect = "slideRight", params= {story = story}})
+    	textbox.isVisible = false
+    	composer.showOverlay("videoScene", {time = 100, effect = "slideRight", isModal= true, params= {story = story}})
 
 	end
     --local descPress = function( event )
     --if descPressed == 0 then
-		 textbox = native.newTextBox(display.contentWidth/2, 360, display.contentWidth,100)
-		textbox.size = 16
-		textbox.text = pins[index].text
-		textbox.isEditable = false
-		sceneGroup:insert(textbox)
+		 
 		--descPressed = 1
 	--else
 		--textbox:removeSelf()
@@ -96,21 +103,21 @@ function scene:create( event )
 {
 	    effect = "fade",
 	    time = 100,
+	     isModal =true,
 	    params = {
 	        pin = pins[index],
 	        photos = photos,
+
 	    }
 	}
-		composer.gotoScene("picsScene", options)
+		textbox.isVisible = false
+		composer.showOverlay("picsScene", options)
 	end
 	local roomsPress = function( event )
-			--print("floorplansPress,",tostring(event.target))
+
 		if(pins[index].hasFP == 1) then 
-			composer.showOverlay("picsoverlay", {time=100, effect="crossFade", params={FP= pins[index].FP}})
-			local fpimage = display.newImageRect("floorplans/NA.png",display.contentWidth*1.5, display.contentHeight*0.75) 
-		fpimage.x = display.contentWidth/2;fpimage.y = display.contentHeight/2 -55
-		--fpimage:addEventListener( "touch", onTouch )
-		sceneGroup:insert(fpimage)
+			textbox.isVisible = false
+			composer.showOverlay("picsoverlay", {time=100, effect="crossFade", isModal = true, params={FP= pins[index].FP}})
 
 		end
 		return true;
@@ -136,7 +143,7 @@ function scene:create( event )
         title = "VR MAP",
         backgroundColor = { 231/255, 76/255, 60/255 },
         titleColor = {1, 1, 1},
-        font = myMap.fontBold,
+        font = myApp.fontBold,
         leftButton = leftButton,
         rightButton = rightButton,
         y = 0,
@@ -224,6 +231,7 @@ end
 function scene:hide( event )
     local sceneGroup = self.view
     print("mapoverlay:hide", event.phase)
+
     --
     -- Clean up any native objects and Runtime listeners, timers, etc.
     --
@@ -232,6 +240,7 @@ end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+      textbox:removeSelf()
     print("mapoverlay:destroy", event.phase)
     
 end

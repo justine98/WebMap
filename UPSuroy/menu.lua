@@ -8,6 +8,8 @@ local rect = myMap.group
 system.activate("multitouch")
 local isDevice = (system.getInfo("environment") == "device")
 local scene = composer.newScene()
+composer.removeHidden()
+--composer.recycleOnSceneChange = true
 
 function scene:create(event)
 	sceneGroup = self.view
@@ -51,23 +53,31 @@ function scene:create(event)
 	}
 	huhButton.x = 280; huhButton.y = -5
 	initScale()
-	rect.dots = {}
-	rect:addEventListener("touch")
 	sceneGroup:insert(bgGroup)
 	sceneGroup:insert(rect)
 	
 	sceneGroup:insert(menuGroup)
 	sceneGroup:insert(menuButton)
 	sceneGroup:insert(huhButton)
+	rect.dots = {}
+	rect:addEventListener("touch")
+	
 end
 function scene:show(event)
 	local sceneGroup = self.view
 	print("menu show:", event.phase)
+	composer.removeScene("previous")
+	if(event.phase == did) then
+		
+		
+	
+	end
+
 end
 function scene:hide(event)
 	local sceneGroup = self.view
 	print("menu hide:", event.phase)
-	rect:removeEventListener("touch", rect)
+	--rect:removeEventListener("touch", rect)
 end
 function scene:destroy(event)
 	local sceneGroup = self.view
@@ -374,8 +384,6 @@ function rect:touch(e)
 				
 				-- apply scaling to rect
 				--rect.xScale, rect.yScale = rect.xScale * scale, rect.yScale * scale
-
-
 
 --Correct implementation of scale limit on pinch zoom
 			local xScale = rect.xScale * scale

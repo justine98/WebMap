@@ -18,7 +18,7 @@ local navBar
 --widget.theme = myMap.theme
 
 local function goBack( event )
-	print("goBack", event.phase)
+	print("picoverlay goBack", event.phase)
 	if event.phase == "ended" then
 		composer.hideOverlay( "fade", 250 )
 	end
@@ -58,13 +58,10 @@ function scene:create( event )
     background.y = display.contentHeight / 2
     background.id = 'Background'
 
-
     sceneGroup:insert(background)
 
    -- sharingPanel = widget.newSharingPanel({
     --	})
-
-
 	local leftButton = {
 		onEvent = goBack,
 		width = 59,
@@ -119,7 +116,6 @@ function scene:create( event )
 
 		images[i] = p
 	end
-	
 	
 	local defaultString = "1 of " .. #images
 	
@@ -301,101 +297,6 @@ function calcAverageScaling( points )
 	end
 
 
-
---creates an object to be moved
-	function newTrackDot(e)
-		-- create a user interface object
-		local circle = display.newCircle( e.x, e.y, 50 )
-		print("newTrackDot:", e.name)
-		-- make it less imposing
-		circle.alpha = .5
-
-		-- keep reference to the rectangle
-		local rect = e.target
-		print("rect.id, ", rect.id)
-		
-		-- standard multi-touch event listener
-		function circle:touch(e)
-			-- get the object which received the touch event
-			local target = circle
-			print(event)
-			print("circle touch", e.phase)
-			-- store the parent object in the event
-			e.parent = rect
-
-		
-			-- handle each phase of the touch event life cycle...
-			if (e.phase == "began") then
-				print("began:" , e.phase)
-				-- tell corona that following touches come to this display object
-				display.getCurrentStage():setFocus(target, e.id)
-				-- remember that this object has the focus
-				target.hasFocus = true
-				if(target.hasFocus) then
-					print("target has focus")
-				else
-					print("no focua")
-				-- indicate the event was handled
-				end 
-				return true
-			elseif (target.hasFocus) then
-				print("hasFocus")
-				-- this object is handling touches
-				
-				if (e.phase == "moved") then
-					print("circle began")
-					-- move the display object with the touch (or whatever)
-					target.x, target.y = e.x, e.y
-				else -- "ended" and "cancelled" phases
-					print("hasFocus but not moved")
-					-- stop being responsible for touches
-					display.getCurrentStage():setFocus(target, nil)
-					-- remember this object no longer has the focus
-					target.hasFocus = false
-				end
-				
-				-- send the event parameter to the rect object
-				--rect:touch(e)
-				--background:touch(e)
-				print("before touchlistener p", e.phase)
-				bgListener(self, e)
-				return true
-				
-				-- indicate that we handled the touch and not to propagate it
-				
-			end
-			
-			-- if the target is not responsible for this touch event return false
-			return false
-		end
-		
-		-- listen for touches starting on the touch layer
-		circle:addEventListener("touch")
-		
-		-- listen for a tap when running in the simulator
-		function circle:tap(e)
-			if (e.numTaps == 2) then
-				-- set the parent
-				e.parent = rect
-				
-				-- call touch to remove the tracking dot
-				rect:touch(e)
-			end
-			return true
-		end
-		
-		-- only attach tap listener in the simulator
-		if (not isDevice) then
-			circle:addEventListener("tap")
-		end
-		
-		-- pass the began phase to the tracking dot
-		circle:touch(e)
-		
-		-- return the object for use
-		return circle
-	end
-
 	
 	function setSlideNumber()
 		print("setSlideNumber", imgNum .. " of " .. #images)
@@ -502,12 +403,10 @@ end
 -- keep a list of the tracking dots
 
 
-
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
-
 ---------------------------------------------------------------------------------
 
 return scene
