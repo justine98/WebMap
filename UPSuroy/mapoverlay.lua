@@ -1,8 +1,9 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require("widget")
-local myMap = require("mymap")
+
 local widgetExtras = require("widget-extras")
+local myApp = require("mymap")
 
 local screenW, screenH = display.contentWidth, display.contentHeight
 local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.viewableContentHeight
@@ -18,7 +19,7 @@ local navBar
 local pins
 local index
 local descPressed = 0
---widget.theme = myMap.theme
+--widget.theme = myApp.theme
 
 
 local function goBack( event )
@@ -41,7 +42,7 @@ local function showPanel( event )
     end
 local function setSlideNumber()
 		
-		navBar:setLabel(pins[index].label)
+	navBar:setLabel(pins[index].label)
 		--imageNumberTextShadow.text = imgNum .. " of " .. #images
 	end
 --function new( imageSet, slideBackground, top, bottom )	
@@ -56,11 +57,10 @@ function scene:create( event )
 	if event.params and event.params.start then
 		start = event.params.start
 	end
-	pins = event.params.pinDetails
-	 index = event.params.index
-	 videostory = pins[index].video
-	 photos = event.params.photos
-
+	pins = myApp.mapPins
+	index = event.params.index
+	videostory = pins[index].video
+	 photos = myApp.photos[index]
 	assert(pins, "Error: pins list not set")
 
 	viewableScreenW = display.contentWidth
@@ -143,7 +143,7 @@ function scene:create( event )
         title = "VR MAP",
         backgroundColor = { 231/255, 76/255, 60/255 },
         titleColor = {1, 1, 1},
-        font = myMap.fontBold,
+        font = myApp.fontBold,
         leftButton = leftButton,
         rightButton = rightButton,
         y = 0,

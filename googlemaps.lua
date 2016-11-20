@@ -2,10 +2,9 @@ local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require( "widget" )
 local widgetExtras = require( "widget-extras" )
-local db = require("database")
-local myApp = require( "mymap" )
+local myMap = require( "mymap" )
 
---widget.setTheme(myApp.theme)
+
 
 local titleText
 local myMap
@@ -19,26 +18,17 @@ local addressField
 local views = {}
 
 local UPC = {}
--- UPC[1] = "UP Administration Building, Cebu City"
--- UPC[2] = "Sugbo Cultural Center, Gorordo Avenue, Cebu City"
--- UPC[3] = "University Of The Philippines Open University, A.S Bldg, Gorordo Avenue, Cebu City"
--- UPC[4] = "UP Football Field, Cebu City"
--- UPC[4] = "University of the Philippines High School Cebu, Cebu City"
-UPC[1] = "1745 E Bayshore Rd, Palo Alto, CA"
-UPC[2] = "2775 Middlefield Rd, Palo Alto, CA"
-UPC[3] = "376 University Ave, Palo Alto, CA"
+UPC[1] = "UP Administration Building, Cebu City"
+UPC[2] = "Sugbo Cultural Center, Gorordo Avenue, Cebu City"
+UPC[3] = "University Of The Philippines Open University, A.S Bldg, Gorordo Avenue, Cebu City"
+UPC[4] = "UP Football Field, Cebu City"
+UPC[4] = "University of the Philippines High School Cebu, Cebu City"
 
 local coordinates = {}
--- coordinates[1].name = "Admin Field"
--- coordinates[1].label = "10.321554, 123.898483"
+coordinates[1] = "Admin Field"
+coordinates[1].xy = "10.321554, 123.898483"
 
-local function pinListener(event)
-	composer.gotoScene("mapoverlay", {time=250, effect="slideLeft", params={index = 8}})
-	--print("pintap")
-	--composer.gotoScene("pintap")
-	return true;
 
-end
 
 
 local function ignoreTouch( event )
@@ -58,41 +48,24 @@ local function addStarbucks( event , id )
 		subtitle=UPC[id], 
 	    imageFile = 
 	    {
-    	    filename = "coronamarker.png",
+    	    filename = "pin.png",
         	baseDir = system.ResourcesDirectory
     	},
 		listener=markerListener 
 	}
 	myMap:addMarker(event.latitude, event.longitude, options)
 end
-local function callpop() 
-populateMarkers(10.322272, 123.898209, 8)
-end
-function populateMarkers(lat, long, index) 
-	local options = {
-		title = myApp.mapPins[index].label,
-		imageFile = 
-		{
-			filename = "images/coronamarker.png",
-			baseDir = system.ResourcesDirectory
-		},
-		listener = pinListener,
-		id = index,
-		--listener=pinListener(index)
-	}
-		myMap:addMarker(lat, long, options)
 
-end
 local function mapLocationHandler(event)
 	myMap:setCenter( event.latitude, event.longitude, false )
-    myMap:setRegion( event.latitude, event.longitude, 0.25, 0.25, false)
+    myMap:setRegion( event.latitude, event.longitude, 0.1, 0.1, false)
     print("adding office marker")
     local options = { 
     	title="UP Cebu", 
     	subtitle="",  
 	    imageFile = 
 	    {
-    	    filename = "images/coronamarker.png",
+    	    filename = "pin.png",
         	baseDir = system.ResourcesDirectory
     	},
        	listener=markerListener 
@@ -104,23 +77,7 @@ local function mapLocationHandler(event)
 	    print(errorMessage)
 	end
 end
-local function initUP(event)
-	myMap:setCenter(10.3223812, 123.898717, false )
-    myMap:setRegion( 10.3223812, 123.898717, 0.001, 0.001, false)
-			  local options = { 
-    	title="UP Cebu", 
-    	subtitle="",  
-	    imageFile = "images/coronamarker.png",
-	    listener = markerListener
-    }
-			
-    		local result, errorMessage = myMap:addMarker( 10.3223812, 123.898717, options )
-    		if ( result ) then
-    print( "Marker added" )
-	else
-    print( errorMessage )
-	end
-end
+
 local function setMode( event )
 	if event.phase == "ended" then
 		for i = 1, #views do
@@ -166,10 +123,10 @@ function scene:create( event )
     sceneGroup:insert(background)
 
     navBar = widget.newNavigationBar({
-        title = "Temp UP Cebu Map",
+        title = params.pageTitle,
         backgroundColor = { 0.96, 0.62, 0.34 },
         titleColor = {1, 1, 1},
-        font = myApp.fontBold
+        font = myMap.fontBold
     })
     sceneGroup:insert(navBar)
 
@@ -180,7 +137,7 @@ function scene:create( event )
     addressBackground:setFillColor( 1 )
     addressBackground.anchorX = 0
     addressBackground.anchorY = 0
-    addressLabel = display.newText( "Address", 10, 15, myApp.fontBold, 20)
+    addressLabel = display.newText( "Address", 10, 15, myMap.fontBold, 20)
     addressLabel:setFillColor( 0 )
     addressGroup:insert( addressLabel )
     addressLabel.anchorX = 0
@@ -213,7 +170,7 @@ function scene:create( event )
 	views[1]:setFillColor( 1, 1, 0.875)
 	views[1]:setStrokeColor( 0.875, 0.875, 0.75)
 	views[1].strokeWidth = 1
-	views[1].label = display.newText("Standard",0,0,myApp.font, 12 )
+	views[1].label = display.newText("Standard",0,0,myMap.font, 12 )
 	views[1].label.x = views[1].x
 	views[1].label.y = views[1].y - 3
 	views[1].label:setFillColor( 0.25, 0.25, 0.25 )
@@ -228,7 +185,7 @@ function scene:create( event )
 	views[2]:setFillColor( 1, 1, 0.75 )
 	views[2]:setStrokeColor(0.875, 0.875, 0.75 )
 	views[2].strokeWidth = 1
-	views[2].label = display.newText("Satellite",0,0,myApp.font, 12 )
+	views[2].label = display.newText("Satellite",0,0,myMap.font, 12 )
 	views[2].label.x = views[2].x
 	views[2].label.y = views[2].y - 3
 	views[2].label:setFillColor( 0.375, 0.375, 0.375 )
@@ -243,7 +200,7 @@ function scene:create( event )
 	views[3]:setFillColor( 1, 1, 0.75)
 	views[3]:setStrokeColor( 0.875, 0.875, 0.75 )
 	views[3].strokeWidth = 1
-	views[3].label = display.newText("Hybrid",0,0,myApp.font, 12 )
+	views[3].label = display.newText("Hybrid",0,0,myMap.font, 12 )
 	views[3].label.x = views[3].x
 	views[3].label.y = views[3].y - 3
 	views[3].label:setFillColor( 0.375, 0.375, 0.375)
@@ -291,16 +248,14 @@ function scene:show( event )
 			-- call our real function using the index of the table as an ID for the marker
 			--
 
-			-- for i = 1, #UPC do
-			-- 	myMap:requestLocation(UPC[i], function(event) addStarbucks(event, i); end)
-			-- end
-			timer.performWithDelay( 1000, initUP)
-			--myMap:requestLocation( "University of the Philippines, Cebu Campus, Cebu City, Central Visayas", mapLocationHandler )
+			for i = 1, #UPC do
+				myMap:requestLocation(UPC[i], function(event) addStarbucks(event, i); end)
+			end
+
+			myMap:requestLocation( "University of the Philippines, Cebu Campus", mapLocationHandler )
 			views[1]:addEventListener("touch", setMode)
 			views[2]:addEventListener("touch", setMode)
 			views[3]:addEventListener("touch", setMode)
-			timer.performWithDelay(1000,callpop)
-			timer.performWithDelay(1000, populateMarkers(10.322552, 123.899031, 13))
 		else
 			native.showAlert( "Simulator", "Maps are only avaiable on device.", { "Okay" } )
 		end
