@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
 	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
   	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  	<script type="text/javascript" src="node_modules/ngtouch/build/ngTouch.min.js"></script>
   	<script src="js/app.js"></script>
     <script src="js/MainController.js"></script> 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -19,60 +20,41 @@
 		<section id="EditorBackground">
 			<div class="editBody" id="editBody">
 				<div class="map-container" id="map-container">
-					<img class="map">
+					<img class="map" id="map">
+					<canvas class="mapCanvas" id="mapCanvas"></canvas>
         	<!-- <div ng-repeat="pin in pins" class="pin" style="top:{{ pin.t }};left:{{ pin.l }};" id="{{$index}}" title="{{pin.Bldng}}">
-						<img id="pin_{{$index + 1}}" class="pinImg" src="images/pin.png" width="50" height="50">
+						<img id="pin_{{$index + 1}}" class="pin" src="images/pin.png" width="50" height="50">
 						<ul class="bldng">{{pin.Bldng}}</ul>
 		      </div> -->	
 				</div>
 			</div>
 
 			<div class="toolShelf">
-			  <div class="toolBox">
-			    <div class="pinTool">
-						<img id="pinimg" class="pinImg" src="images/pin1.png" width="25" height="37">
-	        </div>
+			  <div id="marker" class="toolBox" ondrag="setpinID(this.id)">
+					<img id="marker" class="pinTool" src="images/pin1.png" width="25" height="37">
 			  </div>
-			  <div class="toolBox">
-			    <div class="pinTool">
-						<img id="pinimg" class="pinImg" src="images/pin1.png" width="25" height="37">
-	        </div>
+			  <div id='markedArea' class="toolBox" onclick="trace(this.id)">
+					<img id="perimeter" class="perimeter"  src="images/traceM.png" width="37" height="37">
+			  </div>
+			  <div id="restrict" class="toolBox" ondrag="setpinID(this.id)">
+					<img id="perimeter" class="pinTool" src="images/restricted1.png" width="27" height="27">
+			  </div>
+			  <div id='restrictedArea' class="toolBox" onclick="trace(this.id)">
+					<img id="perimeter" class="perimeter" src="images/traceR.png" width="37" height="37">
+			  </div>
+			  <div id='parking' class="toolBox" ondrag="setpinID(this.id)">
+					<img id="parking" class="pin" src="images/parking.png" width="27" height="27">
+			  </div>
+			  <div id='parkingArea' class="toolBox" onclick="trace(this.id)">
+					<img id="traceP" class="perimeter" src="images/traceP.png" width="37" height="37">
+			  </div>
+			  <div id='path' class="toolBox" onclick="trace(this.id)">
+					<img class="path" src="images/path.png" width="40" height="40">
+			  </div>
+			  <div class="toolBox" onclick="changeMap()">
+					<img id="mapChangeImg" class="mapChangeImg" src="images/mapChange.png" width="30" height="30">
 			  </div>
 			</div>
-
-			<!-- <div class="toolbar" >
-				<div class="toolPanel" >
-					<div class="pinHolder">
-						<div class="pinTool">
-							<img id="pinimg" class="pinImg" src="images/pin.png" width="auto" height="37">
-		        </div>	
-					</div>
-
-					<div class="pinHolder">
-						<div class="pinTool">
-							<img id="pinimg" class="pinImg" src="images/start.png" width="auto" height="37">
-		        </div>	
-					</div>
-
-					<div class="pinHolder">
-						<div class="pinTool">
-							<img id="pinimg" class="pinImg" src="images/finish.png" width="auto" height="37">
-		        </div>	
-					</div>
-
-					<div class="toolContent">
-						<button class="disabler" onclick="disableThem()">Snap</button>
-					</div>
-
-					<div class="toolContent">
-						<button class="enabler" onclick="enableThem()">Release</button>
-					</div>
-
-					<div class="toolContent">
-						<button class="changeMap" onclick="changeMap()">Change Map</button>
-					</div>
-				</div>
-			</div> -->
 
 			<div class="trashcan">
 				<img class="trashImg" src="images/trash-can.svg">
@@ -108,25 +90,294 @@
 					<div class="backTo"><button class="backOne" onclick="backT()">Go Back</button></div>
 					<div class="close"><img src="images/x.png" height="15" width="15" onclick="closePreviewer()"></div>	
 				</div>
-
 			</div>
 
-						<!-- <div class="frmap" onclick="showMap()">
-							<div class="maphead">
-								Upload Map from Google Maps:
-							</div>
-							<div class="mapbody">
-								<img class="mapImg">
-								<button class="setMap" onclick="loadMap()">Submit</button>
-							</div>
-						</div> -->
-
+			<div id="myModal" class="modal">
+			  <!-- Modal content -->
+			  <div class="modal-content">
+			    <span class="close">x</span>
+			    <input type="text" name="Area Name" class="getTitle">
+			    <button class="deleteArea" onclick="deleteArea()">Delete</button>
+			  </div>
+			</div>
 		</section>
 
+
+
 		<script>
+			var modal = document.getElementById('myModal');
+			// Get the <span> element that closes the modal
+			var span = document.getElementsByClassName("close")[0];
+			// When the user clicks on <span> (x), close the modal
+			span.onclick = function() {
+		    modal.style.display = "none";
+			}
+			// When the user clicks anywhere outside of the modal, close it
+			window.onclick = function(event) {
+		    if (event.target == modal) {
+		      modal.style.display = "none";
+		    }
+			}
+
+
 			var map;
 			var mapUrl;
+			var first = true;
+			var path = false;
 			var sourced = false;
+			var endRadius = 5;
+			var mouseX = 0;
+			var mouseY = 0;
+			var isStarted = false;
+			var draw = false;
+			var canvas = document.getElementById('mapCanvas');
+			var ctx;
+			var c2;
+			var initx;
+			var inity;
+			var firstx;
+			var firsty;
+			var perimeter=[];
+			var selected;
+			/*var perimeter = [[]];*/
+			var peri = 0;
+			var paths = [];
+			var pat = 0;
+
+			function trace(type){
+				if(!draw){
+					ctx = canvas.getContext("2d");
+					c2 = canvas.getContext("2d");
+
+					if(type == 'path'){
+						/*paths[peri].color = c2.strokeStyle = '#f00';*/
+						paths.push([]);
+						path = true;
+					} else {
+						perimeter.push({type: '', color: '',points:[]});
+						perimeter[peri].type = type;
+
+						if (type == 'markedArea'){
+							perimeter[peri].color = c2.fillStyle = c2.strokeStyle = 'red';
+						} else if (type == 'restrictedArea'){
+							perimeter[peri].color = c2.fillStyle = c2.strokeStyle = 'yellow';
+						} else if (type == 'parkingArea'){
+							perimeter[peri].color = c2.fillStyle = c2.strokeStyle = 'blue';
+						}
+					}
+					ctx.globalAlpha=1;
+					draw = true;
+				}
+			}
+
+/*			function define(shape) {
+				ctx = canvas.getContext("2d");
+		    ctx.beginPath();
+		    ctx.moveTo(shape[0], shape[1]);
+		    for (var i = 2; i < shape.length; i+=2) {
+		        ctx.lineTo(shape[i], shape[i+1]);
+		    }
+		    ctx.closePath();
+			}*/
+
+			function deline(path) {
+				ctx = canvas.getContext("2d");
+		    ctx.beginPath();
+		    ctx.moveTo(path[0], path[1]);
+		    for (var i = 2; i < path.length; i+=2) {
+		        ctx.lineTo(path[i], path[i+1]);
+		    }
+		    ctx.stroke();
+			}
+
+			canvas.addEventListener('click', function(e){
+				var x = e.clientX - $('.map-container').offset().left;
+			  var y = e.clientY - $('.map-container').offset().top;
+
+			  if(draw){
+			  	if(isStarted){
+				  	if(Math.abs(x - initx) < endRadius && Math.abs(y - inity) < endRadius && !path){
+				  		endShape();
+				  	}
+				  	ctx.lineTo(x,y);
+				  	ctx.lineWidth = 3;
+				  	ctx.stroke();
+			  		if(!path){
+			  			ctx.fillRect((firstx-5),(firsty-5),10,10);
+			  			ctx.fillRect(x-5,y-5,10,10);
+				  		perimeter[peri].points.push(x);
+				  		perimeter[peri].points.push(y);
+			  		} else {
+			  			ctx.fillRect((firstx-7.5),(firsty-7.5),15,15);
+			  			paths[pat].push(x);
+				  		paths[pat].push(y);
+			  		}
+				  	lastx = x;
+				  	lasty = y;
+				  } else {
+				  	if(!(Math.abs(x - initx) < endRadius && Math.abs(y - inity) < endRadius)){
+				  		initx = x;
+					  	inity = y;
+							if(!path){
+				  			ctx.fillRect((x-5),(y-5),10,10);
+				  			perimeter[peri].points.push(x);
+					  		perimeter[peri].points.push(y);
+				  		} else {
+				  			ctx.fillRect((x-7.5),(y-7.5),15,15);
+				  			paths[pat].push(x);
+				  			paths[pat].push(y);
+				  		}
+							ctx.beginPath();
+					  	ctx.moveTo(x,y);
+						  firstx = x;
+						  firsty = y;
+					  	isStarted = true;
+				  	}
+				  }
+			  } else {
+			  	for (var i = paths.length - 1; i >= 0; i--) {
+			  		deline(paths[i]);
+
+		        if (ctx.isPointInPath(x, y)) {
+	            if (confirm("Do you want to Delete this Path") == true) {
+	            	c2 = canvas.getContext("2d");
+	            	c2.clearRect(0, 0, canvas.width, canvas.height);
+				        paths.splice(i, 1);
+				        if(paths.length > 1){
+				        } else {
+				        	paths.push([]);
+				        }
+
+				        reDraw();
+				        c2 = null;
+				        pat--;
+				      } else {
+				        
+				      }
+		       	}
+			  	}
+			  	for (var i = perimeter.length-1; i >= 0; i--) {
+
+			      var shape = perimeter[i].points;
+
+		        // define the current shape
+		        define(shape);
+		        // test if the mouse is in the current shape
+		        if (ctx.isPointInPath(x, y)) {
+	            /*if (confirm("Do you want to Delete this Area") == true) {
+	            	c2 = canvas.getContext("2d");
+	            	c2.clearRect(0, 0, canvas.width, canvas.height);
+				        perimeter.splice(i, 1);
+				        if(perimeter.length > 1){
+				        } else {
+				        	perimeter.push({type: '', color: '',points:[]});
+				        }
+
+				        reDraw();
+				        c2 = null;
+				        peri--;
+				        break;
+				      } else {
+				        
+				      }*/
+				      selected = i;
+				      modal.style.display = "block";
+				      break;
+		        }
+			    }
+			    ctx = null;
+			  }
+
+			});
+
+			function deleteArea() {
+				c2 = canvas.getContext("2d");
+      	c2.clearRect(0, 0, canvas.width, canvas.height);
+        perimeter.splice(selected, 1);
+        if(perimeter.length > 1){
+        } else {
+        	perimeter.push({type: '', color: '',points:[]});
+        }
+
+        reDraw();
+        c2 = null;
+        peri--;
+        modal.style.display = "none";
+			}
+
+			canvas.addEventListener('dblclick', function(e){
+				if(isStarted){
+					endShape();
+				}
+			});
+
+			function endShape(){
+				if(!path){
+					ctx.lineTo(initx, inity);
+					ctx.lineWidth = 3;
+					ctx.stroke();
+					ctx.closePath();
+					perimeter[peri].points.push(initx);
+			  	perimeter[peri].points.push(inity);
+			  	ctx.clearRect(0, 0, canvas.width, canvas.height);
+			  	reDraw();
+			  	perimeter.push({type: '', color: '', points:[]});
+					peri++;
+				} else {
+					ctx.fillRect((lastx-7.5),(lasty-7.5),15,15);
+					/*ctx.clearRect(0, 0, canvas.width, canvas.height);*/
+					paths.push([]);
+					pat++;
+					path = false;
+				}
+				first = true;
+				isStarted = false;
+				draw = false;
+				ctx = null;
+				c2 = null;
+			}
+
+			function reDraw(){
+				ctx = canvas.getContext("2d");
+				c2 = canvas.getContext("2d");
+				for (var i = 0; i < perimeter.length; i++) {
+					c2.beginPath();
+					c2.moveTo(perimeter[i].points[0],perimeter[i].points[1]);
+					for (var j = 2; j < perimeter[i].points.length; j+=2) {
+						c2.lineTo(perimeter[i].points[j], perimeter[i].points[j+1]);
+					}
+					c2.fillStyle = c2.strokeStyle = perimeter[i].color;
+					c2.closePath();
+					c2.globalAlpha=0.2;
+					c2.fill();
+					c2.globalAlpha=1;
+					c2.stroke();
+		    }
+
+		    ctx.globalAlpha=1;
+		    ctx.fillStyle='black';
+		    ctx.strokeStyle='#f00'
+		    /*ctx.strokeStyle = '#f00';*/
+		    for (var i = 0; i < paths.length; i++) {
+					ctx.moveTo(paths[i][0],paths[i][1]);
+					for (var j = 2; j < paths[i].length; j+=2) {
+						ctx.lineTo(paths[i][j], paths[i][j+1]);
+					}
+					ctx.stroke();
+					ctx.fillRect((paths[i][0]-7.5),(paths[i][1]-7.5),15,15);
+					ctx.fillRect((paths[i][paths[i].length-2]-7.5),(paths[i][paths[i].length-1]-7.5),15,15);
+		    }
+			}
+
+			function define(shape) {
+				ctx = canvas.getContext("2d");
+		    ctx.beginPath();
+		    ctx.moveTo(shape[0], shape[1]);
+		    for (var i = 2; i < shape.length; i+=2) {
+		        ctx.lineTo(shape[i], shape[i+1]);
+		    }
+		    ctx.closePath();
+			}
 
 			function prepMap(){
 				$('.mapUpload').attr('style', 'visibility: hidden;');
@@ -342,11 +593,16 @@
 		        mapC.style.width = x;
 		        mapC.style.height = y;
 
+		        $('.mapCanvas').attr('width', x);
+		        $('.mapCanvas').attr('height', y);
+
 		        $('.map').attr('width', x);
 		        $('.map').attr('width', y);
 		        $('.map').attr('src', mapUrl);
 		        $('.map').resizable('destroy');
-		        $('.map').resizable();
+		        $('.map').resizable({
+		        	alsoResize: '.mapCanvas'
+		        });
 		        $('.map').resizable("resizeTo", {
 			        height: y, 
 			        width: x 
@@ -361,9 +617,13 @@
     		appendTo: '.editBody',
     	})
 
-    	$('.pinImg').onload = function(){
+    	/*$('.pin').onload = function(){
     		this.attr("id", "pin_" + ($('.pin').length + 1));
-    	}
+    	}*/
+    	var pinID;
+    	function setpinID (id) {
+    		pinID = id;
+    	};
 
     	$(".map-container").droppable({
 				accept:'.pinTool, .pin',
@@ -373,7 +633,7 @@
             div = div.clone();
             div.removeClass('pinTool');
             div.addClass('pin');
-            div.find('.pinImg').attr("id", "pin_" + ($('.pin').length + 1));
+            div.attr("id", pinID + ($('.pin').length));
             div.draggable({revert: 'invalid'}).click(function(event){
           		alert(event.target.id);
           	});

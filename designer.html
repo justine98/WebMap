@@ -33,14 +33,14 @@
       <img class="traceM" src="images/traceM.png" height="35" width="35" onclick="traceM()">
     </div>
 
-    <div class="toolBox" title="Click me to set Restricted Places!">
-      <img class="restricted" src="images/restricted.png" height="30" width="30">
+    <div class="toolBox" title="Click me to set Restricted Places!" onclick="setR()">
+      <img class="restricted" src="images/restricted.png" height="30" width="30" onclick="setR()">
     </div>
     <div class="toolBox" title="Click me to set Restriction boundaries" onclick="traceR()">
       <img class="traceR" src="images/traceR.png" height="35" width="35" onclick="traceR()">
     </div>
-    <div class="toolBox" title="Click me to assign Parking Areas!">
-      <img class="parking" src="images/parking.png" height="25" width="25">
+    <div class="toolBox" title="Click me to assign Parking Areas!" onclick="setP()">
+      <img class="parking" src="images/parking.png" height="25" width="25" onclick="setP()">
     </div>
     <div class="toolBox" title="Click me to assign Parking Areas!" onclick="traceP()">
       <img class="traceP" src="images/traceP.png" height="35" width="35" onclick="traceP()">
@@ -69,7 +69,7 @@
 
 <!-- JQuery Actions -->
   <script>
-    $('.pin').draggable({
+    /*$('.pin').draggable({
       helper: 'clone',
       stop: function(e) {
         var point = new google.maps.Point(e.pageX,e.pageY);
@@ -94,7 +94,7 @@
         var ll = overlay.getProjection().fromContainerPixelToLatLng(point);
         parkingMarker(ll);
       }
-    });
+    });*/
   </script>
 <!-- Map Initialization -->
   <script>
@@ -371,6 +371,112 @@
       });
     }
 
+    function setR(){
+      ok = true;
+      //Allowing to draw shapes in the Client Side
+      if(drawingTool.getMap()) {
+          drawingTool.setMap(null); // Used to disable the Polygon tool
+          drawingTool = new google.maps.drawing.DrawingManager();
+      }
+      drawingTool.setOptions({
+          drawingMode : google.maps.drawing.OverlayType.MARKER,
+          drawingControl : true,
+          drawingControlOptions : {
+              position : google.maps.ControlPosition.TOP_CENTER,
+              drawingModes : [google.maps.drawing.OverlayType.MARKER]
+          }
+      });
+
+      drawingTool.setMap(map); 
+
+      google.maps.event.addListener(drawingTool,'markercomplete',function(marker) {
+        drawingTool.setMap(null);
+        marker.setOptions({
+          draggable: true,
+          map: map,
+          streetViewControl: true,
+          icon:'images/restricted1.png'
+        })
+        restricts.push(marker);
+        var index = restricts.indexOf(marker);
+
+        var content = 
+          '<input class="inputTitle" type="text" name="bldng" id="title' + index + '" value="Enter Title here" onclick="this.select()" onkeydown="setName(' + index + ', event)">' + 
+          '<textarea class="inputDetails" id="details' + index + '" value="Enter details here" onclick="this.select()" onkeydown="setDetails(' + index + ', event)">Enter Description here.</textarea>' +
+          '<div class="buttonGroup">' + 
+          '<img class="pinMedia" id="directory"  src="images/directory.png" width="25" height="25" onclick="setPlans(' + index + ')">' + 
+          '<img class="pinMedia" id="photo"  src="images/photo.png" width="25" height="25" onclick="setPhotos(' + index + ')">' +
+          '<img class="pinMedia" id="video"  src="images/video.png" width="25" height="25" onclick="setVideos(' + index + ')">' +
+          '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deletePin2(' + index + ')"></div>  ';
+        var infoWindow = new google.maps.InfoWindow({content: content});
+        restrictInfo.push(infoWindow);
+        marker.addListener('click', function() {
+          if (!(isInfoWindowOpen(infoWindow))){
+            infoWindow.open(map, marker);
+            infoCloser(restrictInfo, index);
+          } else {
+            restrictInfo[index].close();
+          }
+          $('#details' + index).val(marker.getPosition().lng() + "," + marker.getPosition().lat());
+        });
+        infoWindow.open(map, marker);
+        infoCloser(restrictInfo, index);
+      });
+    }
+
+    function setP(){
+      ok = true;
+      //Allowing to draw shapes in the Client Side
+      if(drawingTool.getMap()) {
+          drawingTool.setMap(null); // Used to disable the Polygon tool
+          drawingTool = new google.maps.drawing.DrawingManager();
+      }
+      drawingTool.setOptions({
+          drawingMode : google.maps.drawing.OverlayType.MARKER,
+          drawingControl : true,
+          drawingControlOptions : {
+              position : google.maps.ControlPosition.TOP_CENTER,
+              drawingModes : [google.maps.drawing.OverlayType.MARKER]
+          }
+      });
+
+      drawingTool.setMap(map); 
+
+      google.maps.event.addListener(drawingTool,'markercomplete',function(marker) {
+        drawingTool.setMap(null);
+        marker.setOptions({
+          draggable: true,
+          map: map,
+          streetViewControl: true,
+          icon:'images/parking.png'
+        })
+        parkings.push(marker);
+        var index = parkings.indexOf(marker);
+
+        var content = 
+          '<input class="inputTitle" type="text" name="bldng" id="title' + index + '" value="Enter Title here" onclick="this.select()" onkeydown="setName(' + index + ', event)">' + 
+          '<textarea class="inputDetails" id="details' + index + '" value="Enter details here" onclick="this.select()" onkeydown="setDetails(' + index + ', event)">Enter Description here.</textarea>' +
+          '<div class="buttonGroup">' + 
+          '<img class="pinMedia" id="directory"  src="images/directory.png" width="25" height="25" onclick="setPlans(' + index + ')">' + 
+          '<img class="pinMedia" id="photo"  src="images/photo.png" width="25" height="25" onclick="setPhotos(' + index + ')">' +
+          '<img class="pinMedia" id="video"  src="images/video.png" width="25" height="25" onclick="setVideos(' + index + ')">' +
+          '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deletePin3(' + index + ')"></div>  ';
+        var infoWindow = new google.maps.InfoWindow({content: content});
+        parkingInfo.push(infoWindow);
+        marker.addListener('click', function() {
+          if (!(isInfoWindowOpen(infoWindow))){
+            infoWindow.open(map, marker);
+            infoCloser(parkingInfo, index);
+          } else {
+            parkingInfo[index].close();
+          }
+          $('#details' + index).val(marker.getPosition().lng() + "," + marker.getPosition().lat());
+        });
+        infoWindow.open(map, marker);
+        infoCloser(parkingInfo, index);
+      });
+    }
+
     function traceM(){
       ok = true;
       //Allowing to draw shapes in the Client Side
@@ -393,7 +499,7 @@
         polygon.setEditable(true);
         polygon.setOptions({
           strokeColor: 'red',
-          fillColor: 'red',
+         /* fillColor: 'white',*/
         });
         drawingTool.setMap(null);
 

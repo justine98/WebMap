@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+  <title>SuroyUP</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="css/map/map.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="js/jquery.ui.touch-punch.js"></script>
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCB1PXJVGmlhG4PsJvOH5kTH7RFHcmnZ-E&libraries=places,drawing,geometry&callback=initialize">
+  </script>
+</head>
+<body>
+  <div class="mapCanvas" id="mapCanvas"></div>
+  <div class="toolShelf">
+    <div class="toolBox">
+      <img class="pin" src="images/pin1.png" height="37" width="25">
+    </div>
+  </div>
+  <div class="mapShelf">
+    <ul>
+      <a>University of the Philippines- Main Campus</a>
+      <a>University of the Philippines- SRP Campus</a>
+      <a>Parade of Lights</a>
+      <a>Cookout</a>
+    </ul>
+  </div>
+  <div id="drop-container"><div id="drop-silhouette"></div></div>
+  <div class="d2g" style="position: absolute; bottom: 30px; height: 50px; width:50px; left: 30px;">
+    <img src="images/omap.png" height="50" width="50" onclick="r2g()" style=" border: solid; color: white; border-width: 3px;">
+  </div>
+
+<!-- JQuery Actions -->
+  <script>
+    $('.pin').draggable({
+      helper: 'clone',
+      stop: function(e) {
+        var point = new google.maps.Point(e.pageX,e.pageY);
+        var ll = overlay.getProjection().fromContainerPixelToLatLng(point);
+        placeMarker(ll);
+      }
+    });
+  </script>
+<!-- Map Initialization -->
+  <script>
+    function r2g(){
+      window.location.assign("/map");
+    }
+    var xy;
+    var map;
+    var overlay;
+    var points = [];
+    var markers = [];
+    var infoWindows = [];
+
+    function initialize() {
+      initMap();
+      initEvents();
+    }
+
+    function initMap() {
+      xy = new google.maps.LatLng(10.3223812, 123.898717);
+      var options = {
+        zoom: 18,
+        center: xy
+        };
+      map = new google.maps.Map(document.getElementById("mapCanvas"),options);
+      overlay = new google.maps.OverlayView();
+      overlay.draw = function() {};
+      overlay.setMap(map); 
+    }
+
+    function loadGeoJsonString(geoString) {
+      var geojson = JSON.parse(geoString);
+      map.data.addGeoJson(geojson);
+      zoom(map);
+    }
+
+    /**
+     * Update a map's viewport to fit each geometry in a dataset
+     * @param {google.maps.Map} map The map to adjust
+     */
+    function zoom(map) {
+      var bounds = new google.maps.LatLngBounds();
+      /*map.data.forEach(function(feature) {
+        processPoints(feature.getGeometry(), bounds.extend, bounds);
+      });*/
+      map.fitBounds(bounds);
+    }
+
+    /**
+     * Process each point in a Geometry, regardless of how deep the points may lie.
+     * @param {google.maps.Data.Geometry} geometry The structure to process
+     * @param {function(google.maps.LatLng)} callback A function to call on each
+     *     LatLng point encountered (e.g. Array.push)
+     * @param {Object} thisArg The value of 'this' as provided to 'callback' (e.g.
+     *     myArray)
+     */
+    function processPoints(geometry, callback, thisArg) {
+      if (geometry instanceof google.maps.LatLng) {
+        /*callback.call(thisArg, geometry);*/
+      } else if (geometry instanceof google.maps.Data.Point) {
+        /*callback.call(thisArg, geometry.get());*/
+        placeMarker(geometry.get());
+
+      } else {
+        /*geometry.getArray().forEach(function(g) {
+          processPoints(g, callback, thisArg);
+        });*/
+      }
+    }
+
+    function placeMarker(location) {
+      var marker = new google.maps.Marker({
+        position: location, 
+        draggable: true,
+        map: map,
+        streetViewControl: true,
+        icon:'images/pin1.png'
+      });
+
+      markers.push(marker);
+      var index = markers.indexOf(marker);
+
+      var content = 
+        '<input class="inputTitle" type="text" name="bldng" id="title' + index + '" value="Enter Title here" onclick="this.select()" onkeydown="setName(' + index + ', event)">' + 
+        '<textarea class="inputDetails" id="details' + index + '" value="Enter details here" onclick="this.select()" onkeydown="setDetails(' + index + ', event)">Enter Description here.</textarea>' +
+        '<div class="buttonGroup">' + 
+        '<img class="pinMedia" id="directory"  src="images/directory.png" width="25" height="25" onclick="setPlans(' + index + ')">' + 
+        '<img class="pinMedia" id="photo"  src="images/photo.png" width="25" height="25" onclick="setPhotos(' + index + ')">' +
+        '<img class="pinMedia" id="video"  src="images/video.png" width="25" height="25" onclick="setVideos(' + index + ')">' +
+        '<img class="pinMedia" id="delete"  src="images/delete.png" width="25" height="25" onclick="deletePin(' + index + ')"></div>  ';
+      var infoWindow = new google.maps.InfoWindow({content: content});
+      infoWindows.push(infoWindow);
+      marker.addListener('click', function() {
+        if (!(isInfoWindowOpen(infoWindow))){
+          infoWindow.open(map, marker);
+          infoCloser(index);
+        } else {
+          infoWindows[index].close();
+        }
+        $('#details' + index).val(marker.getPosition().lat() + " " + marker.getPosition().lng());
+      });
+      infoWindow.open(map, marker);
+      infoCloser(index);
+    }
+
+    function isInfoWindowOpen(infoWindow){
+        var map = infoWindow.getMap();
+        return (map !== null && typeof map !== "undefined");
+    }
+
+    function setPlans(){
+      alert('Insert Plans Uploader Here.');
+    }
+
+    function setPhotos(){
+      alert('Insert Photo Uploader Here');
+    }
+
+    function setVideos(){
+      alert('Insert Video Linker Here');
+    }
+
+    function deletePin(index){
+      if (confirm("Are you sure you want to delete this pin?") == true) {
+        markers[index].setMap(null);
+
+        if(index > -1){
+          markers.splice(index, 1);
+          infoWindows.splice(index, 1);
+        }
+        alert('Delete Sucessful.')
+      } else {
+        alert('Delete Cancelled.');
+      }
+    }
+
+    function infoCloser(index){
+      for (var i = infoWindows.length - 1; i >= 0; i--) {
+        if(index != i){
+          infoWindows[i].close();
+        }
+      }
+    }
+
+    function setName(index, event){
+      if(event.keyCode == 13){
+        markers[index].setLabel($('#title' + index).val());
+        alert(markers[index].getLabel());
+      }
+    }
+
+    function setDetails(index, event){
+
+    }
+  </script>
+    <!-- DOM (drag/drop) functions  -->
+  <script>
+    function initEvents() {
+      // set up the drag & drop events
+      var mapContainer = document.getElementById('mapCanvas');
+      var dropContainer = document.getElementById('drop-container');
+
+      // map-specific events
+      mapContainer.addEventListener('dragenter', showPanel, false);
+
+      // overlay specific events (since it only appears once drag starts)
+      dropContainer.addEventListener('dragover', showPanel, false);
+      dropContainer.addEventListener('drop', handleDrop, false);
+      dropContainer.addEventListener('dragleave', hidePanel, false);
+    }
+
+    function showPanel(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      document.getElementById('drop-container').style.display = 'block';
+      return false;
+    }
+
+    function hidePanel(e) {
+      document.getElementById('drop-container').style.display = 'none';
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      hidePanel(e);
+
+      var files = e.dataTransfer.files;
+      if (files.length) {
+        // process file(s) being dropped
+        // grab the file data from each file
+        for (var i = 0, file; file = files[i]; i++) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            loadGeoJsonString(e.target.result);
+          };
+          reader.onerror = function(e) {
+            console.error('reading failed');
+          };
+          reader.readAsText(file);
+        }
+      } else {
+        // process non-file (e.g. text or html) content being dropped
+        // grab the plain text version of the data
+        var plainText = e.dataTransfer.getData('text/plain');
+        if (plainText) {
+          loadGeoJsonString(plainText);
+        }
+      }
+
+      // prevent drag event from bubbling further
+      return false;
+    }
+  </script>
+</body>
+</html>
