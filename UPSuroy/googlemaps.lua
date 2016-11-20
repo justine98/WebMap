@@ -67,6 +67,8 @@ local function addStarbucks( event , id )
 end
 local function callpop() 
 populateMarkers(10.322272, 123.898209, 8)
+populateMarkers(10.322552, 123.899031, 13)
+
 end
 function populateMarkers(lat, long, index) 
 	local options = {
@@ -300,7 +302,6 @@ function scene:show( event )
 			views[2]:addEventListener("touch", setMode)
 			views[3]:addEventListener("touch", setMode)
 			timer.performWithDelay(1000,callpop)
-			timer.performWithDelay(1000, populateMarkers(10.322552, 123.899031, 13))
 		else
 			native.showAlert( "Simulator", "Maps are only avaiable on device.", { "Okay" } )
 		end
